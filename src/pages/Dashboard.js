@@ -1,0 +1,723 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { subscribeToCollection, collections } from '../services/firestore';
+import { Card } from '../components/ui/Card';
+import { Tabs } from '../components/ui/Tabs';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, AreaChart, Area } from 'recharts';
+import { Wallet, ArrowUpRight, ArrowDownRight, CreditCard, Activity, TrendingUp } from 'lucide-react';
+
+const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
+
+export default function Dashboard() {
+    const { currentUser } = useAuth();
+    const [activeTab, setActiveTab] = useState('analytics');
+    const [loading, setLoading] = useState(true);
+
+    // Data
+    const [ledger, setLedger] = useState([]);
+    const [cards, setCards] = useState([]);
+    const [categories, setCategories] = useState([]);
+
+    const [error, setError] = useState(null);
+
+    // Filters
+    const now = new Date();
+    const [selectedMonth, setSelectedMonth] = useState(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
+    const [selectedYear, setSelectedYear] = useState(String(now.getFullYear()));
+
+    useEffect(() => {
+        if (currentUser) {
+            let mounted = true;
+            let loadedCount = 0;
+            const requiredDataSources = 3;
+            const trackers = { ledger: false, cards: false, categories: false };
+
+            const checkLoading = (source) => {
+                if (!mounted) return;
+                if (!trackers[source]) {
+                    trackers[source] = true;
+                    loadedCount++;
+                }
+
+                if (loadedCount >= requiredDataSources) {
+                    setLoading(false);
+                }
+            };
+
+            const handleError = (err) => {
+                console.error("Dashboard subscription error:", err);
+                if (mounted) {
+                    setError(err.message || "Failed to load data");
+                    setLoading(false);
+                }
+            };
+
+            // Safety timeout: stop loading after 10 seconds even if data hasn't arrived
+            const timer = setTimeout(() => {
+                if (mounted && loading) {
+                    console.warn("Dashboard load timed out");
+                    setLoading(false);
+                }
+            }, 10000);
+
+            const unsubLedger = subscribeToCollection(currentUser.uid, collections.transactions, (data) => {
+                setLedger(data);
+                checkLoading('ledger');
+            }, handleError);
+
+            const unsubCards = subscribeToCollection(currentUser.uid, collections.cards, (data) => {
+                setCards(data.filter(c => c.isActive !== false));
+                checkLoading('cards');
+            }, handleError);
+
+            const unsubCats = subscribeToCollection(currentUser.uid, collections.expense_categories, (data) => {
+                setCategories(data);
+                checkLoading('categories');
+            }, handleError);
+
+            return () => {
+                mounted = false;
+                clearTimeout(timer);
+                unsubLedger();
+                unsubCards();
+                unsubCats();
+            };
+        }
+    }, [currentUser, loading]);
+
+    // --- Aggregations ---
+    const netWorth = cards.filter(c => c.isActive !== false).reduce((sum, c) => sum + (c.balance || 0), 0);
+
+    const stats = ledger.reduce((acc, tx) => {
+        const val = parseFloat(tx.amount || 0);
+        switch (tx.type) {
+            case 'income':
+                acc.income += val;
+                break;
+            case 'expense':
+                acc.expense += val;
+                // Accumulate category data
+                const catName = categories.find(c => c.id === tx.categoryId)?.name || 'Uncategorized';
+                acc.byCategory[catName] = (acc.byCategory[catName] || 0) + val;
+                break;
+            case 'credit_usage':
+                acc.credit += val;
+                break;
+            default:
+                break;
+        }
+        return acc;
+    }, { income: 0, expense: 0, credit: 0, byCategory: {} });
+
+    // Charts for Lifetime Analytics
+    const categoryChartData = Object.entries(stats.byCategory)
+        .map(([name, amount], index) => ({
+            name,
+            amount,
+            color: COLORS[index % COLORS.length]
+        }))
+        .sort((a, b) => b.amount - a.amount);
+
+    // --- Monthly Analytics (Filtered) ---
+    const monthlyFiltered = ledger.filter(tx => tx.date && tx.date.startsWith(selectedMonth)).reduce((acc, tx) => {
+        const val = parseFloat(tx.amount || 0);
+        if (tx.type === 'income') acc.income += val;
+        else if (tx.type === 'expense') {
+            acc.expense += val;
+            const catName = categories.find(c => c.id === tx.categoryId)?.name || 'Uncategorized';
+            acc.byCategory[catName] = (acc.byCategory[catName] || 0) + val;
+        }
+        else if (tx.type === 'credit_usage') {
+            acc.credit += val;
+            if (!tx.isPaid) acc.unpaidCredit += val;
+            // Also count credit usage in category stats if it has a category
+            const catName = categories.find(c => c.id === tx.categoryId)?.name || 'Uncategorized';
+            acc.byCategory[catName] = (acc.byCategory[catName] || 0) + val;
+        }
+        return acc;
+    }, { income: 0, expense: 0, credit: 0, unpaidCredit: 0, byCategory: {} });
+
+    const monthlyCategoryChartData = Object.entries(monthlyFiltered.byCategory)
+        .map(([name, amount], index) => ({
+            name,
+            amount,
+            color: COLORS[index % COLORS.length]
+        }))
+        .sort((a, b) => b.amount - a.amount);
+
+    const monthlyDistData = [
+        { name: 'Income', amount: monthlyFiltered.income, fill: '#10b981' },
+        { name: 'Spending', amount: monthlyFiltered.expense, fill: '#ef4444' },
+        { name: 'Credit', amount: monthlyFiltered.credit, fill: '#f59e0b' }
+    ];
+
+    // --- Yearly Analytics (Filtered) ---
+    const yearlyFiltered = ledger.filter(tx => tx.date && tx.date.startsWith(selectedYear)).reduce((acc, tx) => {
+        const val = parseFloat(tx.amount || 0);
+        const dateObj = new Date(tx.date);
+        const monthIndex = dateObj.getMonth();
+
+        if (tx.type === 'income') {
+            acc.income += val;
+            acc.monthlyPerformance[monthIndex].income += val;
+        } else if (tx.type === 'expense') {
+            acc.expense += val;
+            acc.monthlyPerformance[monthIndex].expense += val;
+
+            // Breakdown by Name
+            const name = tx.notes || tx.categoryName || 'General Expense';
+            acc.byName[name] = (acc.byName[name] || 0) + val;
+
+            // Breakdown by Category
+            const catName = categories.find(c => c.id === tx.categoryId)?.name || 'Uncategorized';
+            acc.byCategory[catName] = (acc.byCategory[catName] || 0) + val;
+        } else if (tx.type === 'credit_usage') {
+            acc.credit += val;
+            if (!tx.isPaid) acc.unpaidCredit += val;
+            acc.monthlyPerformance[monthIndex].expense += val;
+
+            // Breakdown by Category
+            const catName = categories.find(c => c.id === tx.categoryId)?.name || 'Uncategorized';
+            acc.byCategory[catName] = (acc.byCategory[catName] || 0) + val;
+        }
+        return acc;
+    }, {
+        income: 0, expense: 0, credit: 0, unpaidCredit: 0,
+        byName: {},
+        byCategory: {},
+        monthlyPerformance: Array.from({ length: 12 }, (_, i) => ({
+            name: new Date(0, i).toLocaleString('default', { month: 'short' }),
+            income: 0,
+            expense: 0,
+            savings: 0
+        }))
+    });
+
+    // Finalize savings data
+    yearlyFiltered.monthlyPerformance.forEach(m => m.savings = m.income - m.expense);
+
+    const yearlyDistData = [
+        { name: 'Income', amount: yearlyFiltered.income, fill: '#10b981' },
+        { name: 'Spending', amount: yearlyFiltered.expense, fill: '#ef4444' },
+        { name: 'Credit', amount: yearlyFiltered.credit, fill: '#f59e0b' }
+    ];
+
+    const sortedYearlyByCategory = Object.entries(yearlyFiltered.byCategory)
+        .map(([name, amount]) => ({ name, amount }))
+        .sort((a, b) => b.amount - a.amount);
+
+    // Available filters
+    const availableMonths = Array.from({ length: 12 }, (_, i) => {
+        const d = new Date(now.getFullYear(), i, 1);
+        return d.toISOString().slice(0, 7);
+    });
+    const availableYears = [String(now.getFullYear()), String(now.getFullYear() - 1)];
+
+    // Lifetime Analytics (Current "Analytics" tab) - reusing stats logic for clarity
+    const lifetimeDistData = [
+        { name: 'Income', amount: stats.income, fill: '#10b981' },
+        { name: 'Expense', amount: stats.expense, fill: '#ef4444' },
+        { name: 'Credit Used', amount: stats.credit, fill: '#f59e0b' }
+    ];
+
+    if (loading) return (
+        <div className="min-h-[60vh] flex items-center justify-center">
+            <div className="animate-pulse space-y-4 text-center">
+                <div className="w-12 h-12 bg-gray-200 rounded-full mx-auto"></div>
+                <div className="text-gray-400 font-medium">Loading Financial Data...</div>
+            </div>
+        </div>
+    );
+
+    if (error) return (
+        <div className="min-h-[60vh] flex items-center justify-center">
+            <div className="bg-rose-50 border border-rose-100 p-8 rounded-2xl text-center max-w-md">
+                <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Activity size={24} />
+                </div>
+                <h2 className="text-lg font-bold text-slate-900 mb-2">Failed to load data</h2>
+                <p className="text-slate-600 mb-6">{error}</p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="px-6 py-2 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors"
+                >
+                    Retry
+                </button>
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="space-y-8 animate-fade-in">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Dashboard</h1>
+                    <p className="text-gray-500 mt-1">Verify your financial health at a glance.</p>
+                </div>
+
+                <Tabs
+                    tabs={[
+                        { id: 'analytics', label: 'Analytics' },
+                        { id: 'monthly', label: 'Monthly Analytics' },
+                        { id: 'yearly', label: 'Yearly Analytics' },
+                        { id: 'summary', label: 'Summary' }
+                    ]}
+                    activeTab={activeTab}
+                    onChange={setActiveTab}
+                    className="w-full md:w-auto min-w-[300px]"
+                />
+            </div>
+
+            {activeTab === 'analytics' && (
+                <div className="space-y-8">
+                    {/* Summary Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {/* Net Worth - Premium Card */}
+                        <div className="relative group overflow-hidden bg-gray-900 rounded-2xl p-6 shadow-xl transition-transform hover:-translate-y-1">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-bl-[100px] opacity-20 group-hover:opacity-30 transition-opacity" />
+                            <div className="relative z-10">
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className="p-3 bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/5">
+                                        <Wallet size={24} className="text-violet-400" />
+                                    </div>
+                                    <span className="flex items-center gap-1 text-xs font-medium text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full">
+                                        <TrendingUp size={12} /> Live
+                                    </span>
+                                </div>
+
+                                <p className="text-gray-400 font-medium text-sm">Total Net Worth</p>
+                                <h3 className="text-3xl font-bold text-white mt-1 tracking-tight">
+                                    ${netWorth.toLocaleString()}
+                                </h3>
+                            </div>
+                        </div>
+
+                        {/* Income */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/50 hover:shadow-md transition-all hover:-translate-y-1">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="p-3 bg-emerald-50 rounded-xl">
+                                    <ArrowUpRight size={24} className="text-emerald-600" />
+                                </div>
+                            </div>
+                            <p className="text-gray-500 font-medium text-sm">Total Income</p>
+                            <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                                ${stats.income.toLocaleString()}
+                            </h3>
+                        </div>
+
+                        {/* Expense */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/50 hover:shadow-md transition-all hover:-translate-y-1">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="p-3 bg-rose-50 rounded-xl">
+                                    <ArrowDownRight size={24} className="text-rose-600" />
+                                </div>
+                            </div>
+                            <p className="text-gray-500 font-medium text-sm">Total Spending</p>
+                            <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                                ${stats.expense.toLocaleString()}
+                            </h3>
+                        </div>
+
+                        {/* Credit */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/50 hover:shadow-md transition-all hover:-translate-y-1">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="p-3 bg-amber-50 rounded-xl">
+                                    <CreditCard size={24} className="text-amber-600" />
+                                </div>
+                                <Activity size={16} className="text-gray-300" />
+                            </div>
+                            <p className="text-gray-500 font-medium text-sm">Credit Usage</p>
+                            <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                                ${stats.credit.toLocaleString()}
+                            </h3>
+                        </div>
+                    </div>
+
+                    {/* Charts Details */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Main Chart */}
+                        <div className="lg:col-span-2 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                            <div className="flex items-center justify-between mb-8">
+                                <h3 className="text-lg font-bold text-gray-900">Spending by Category</h3>
+                                <div className="flex gap-2">
+                                    {/* Legend could go here */}
+                                </div>
+                            </div>
+                            <div className="h-[350px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={categoryChartData} barSize={40}>
+                                        <defs>
+                                            {categoryChartData.map((entry, index) => (
+                                                <linearGradient key={`grad-${index}`} id={`color-${index}`} x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor={entry.color} stopOpacity={1} />
+                                                    <stop offset="100%" stopColor={entry.color} stopOpacity={0.7} />
+                                                </linearGradient>
+                                            ))}
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                                        <XAxis
+                                            dataKey="name"
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#6b7280', fontSize: 12 }}
+                                            dy={10}
+                                        />
+                                        <YAxis
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#6b7280', fontSize: 12 }}
+                                            tickFormatter={(value) => `$${value}`}
+                                        />
+                                        <Tooltip
+                                            cursor={{ fill: '#f9fafb' }}
+                                            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        />
+                                        <Bar dataKey="amount" radius={[8, 8, 0, 0]}>
+                                            {categoryChartData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={`url(#color-${index})`} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        {/* Side Chart */}
+                        <div className="lg:col-span-1 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                            <h3 className="text-lg font-bold text-gray-900 mb-8">Distribution</h3>
+                            <div className="h-[300px] w-full relative">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={lifetimeDistData}
+                                            dataKey="amount"
+                                            nameKey="name"
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={100}
+                                            paddingAngle={5}
+                                            stroke="none"
+                                        >
+                                            {lifetimeDistData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                                {/* Center Stats */}
+                                <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
+                                    <p className="text-xs text-gray-400 font-medium uppercase">Flow</p>
+                                    <p className="text-xl font-bold text-gray-900">${(stats.income + stats.expense).toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <div className="space-y-3 mt-6">
+                                {lifetimeDistData.map((item, i) => (
+                                    <div key={i} className="flex items-center justify-between text-sm">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.fill }} />
+                                            <span className="text-gray-600">{item.name}</span>
+                                        </div>
+                                        <span className="font-semibold text-gray-900">${item.amount.toLocaleString()}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'monthly' && (
+                <div className="space-y-8">
+                    {/* Header with Selected Month */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div>
+                            <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase">
+                                {new Date(selectedMonth + '-01').toLocaleString('default', { month: 'long' })}
+                                <span className="text-slate-300 ml-3">{selectedMonth.split('-')[0]}</span>
+                            </h2>
+                            <p className="text-sm font-bold text-slate-400 mt-1 uppercase tracking-widest">Monthly Performance Breakdown</p>
+                        </div>
+
+                        {/* Month Filter Selector */}
+                        <div className="flex items-center gap-4 bg-white p-3 px-5 rounded-2xl border border-gray-100 shadow-sm transition-all hover:shadow-md">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Select Period:</label>
+                            <select
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(e.target.value)}
+                                className="bg-transparent border-none text-sm font-black text-slate-900 outline-none cursor-pointer pr-8 hover:text-emerald-600 transition-colors"
+                            >
+                                {availableMonths.map(m => (
+                                    <option key={m} value={m}>
+                                        {new Date(m + '-01').toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <Card className="p-6 bg-slate-900 text-white relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-violet-500/10 rounded-bl-full" />
+                            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Total Net Worth</p>
+                            <h3 className="text-2xl font-black italic tracking-tight">${netWorth.toLocaleString()}</h3>
+                            <div className="mt-4 flex items-center gap-2 text-[10px] text-emerald-400 font-bold bg-emerald-400/10 w-fit px-2 py-1 rounded-full">
+                                <Activity size={10} /> LIFETIME
+                            </div>
+                        </Card>
+                        <Card className="p-6">
+                            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Monthly Income</p>
+                            <h3 className="text-2xl font-black text-slate-900">${monthlyFiltered.income.toLocaleString()}</h3>
+                        </Card>
+                        <Card className="p-6">
+                            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Monthly Spending</p>
+                            <h3 className="text-2xl font-black text-slate-900 text-rose-600">${monthlyFiltered.expense.toLocaleString()}</h3>
+                        </Card>
+                        <Card className="p-6">
+                            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Credit Usage</p>
+                            <h3 className="text-2xl font-black text-slate-900 text-amber-600">${monthlyFiltered.credit.toLocaleString()}</h3>
+                        </Card>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Monthly Bar Chart */}
+                        <div className="lg:col-span-2 bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                            <h3 className="text-lg font-bold text-slate-900 mb-8">Monthly Spending by Category</h3>
+                            <div className="h-[350px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={monthlyCategoryChartData} barSize={40}>
+                                        <defs>
+                                            {monthlyCategoryChartData.map((entry, index) => (
+                                                <linearGradient key={`grad-m-${index}`} id={`color-m-${index}`} x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor={entry.color} stopOpacity={1} />
+                                                    <stop offset="100%" stopColor={entry.color} stopOpacity={0.7} />
+                                                </linearGradient>
+                                            ))}
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                                        <XAxis
+                                            dataKey="name"
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#6b7280', fontSize: 12 }}
+                                            dy={10}
+                                        />
+                                        <YAxis
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#6b7280', fontSize: 12 }}
+                                            tickFormatter={(value) => `$${value}`}
+                                        />
+                                        <Tooltip
+                                            cursor={{ fill: '#f9fafb' }}
+                                            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        />
+                                        <Bar dataKey="amount" radius={[8, 8, 0, 0]}>
+                                            {monthlyCategoryChartData.map((entry, index) => (
+                                                <Cell key={`cell-m-${index}`} fill={`url(#color-m-${index})`} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        {/* Monthly Distribution Pie Chart */}
+                        <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                            <h3 className="text-lg font-bold text-slate-900 mb-8">Monthly Distribution</h3>
+                            <div className="h-[300px]">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={monthlyDistData}
+                                            dataKey="amount"
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={100}
+                                            paddingAngle={5}
+                                            stroke="none"
+                                        >
+                                            {monthlyDistData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                            <div className="flex flex-col gap-3 mt-4">
+                                {monthlyDistData.map(item => (
+                                    <div key={item.name} className="flex items-center justify-between text-sm">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.fill }} />
+                                            <span className="text-sm font-bold text-slate-600 uppercase tracking-tighter">{item.name}</span>
+                                        </div>
+                                        <span className="text-sm font-black text-slate-900">${item.amount.toLocaleString()}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'yearly' && (
+                <div className="space-y-8">
+                    {/* Header with Selected Year */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div>
+                            <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase">
+                                Year <span className="text-slate-300 ml-2">{selectedYear}</span>
+                            </h2>
+                            <p className="text-sm font-bold text-slate-400 mt-1 uppercase tracking-widest">Annual Financial Overview</p>
+                        </div>
+
+                        {/* Year Filter Selector */}
+                        <div className="flex items-center gap-4 bg-white p-3 px-5 rounded-2xl border border-gray-100 shadow-sm transition-all hover:shadow-md">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Select Year:</label>
+                            <select
+                                value={selectedYear}
+                                onChange={(e) => setSelectedYear(e.target.value)}
+                                className="bg-transparent border-none text-sm font-black text-slate-900 outline-none cursor-pointer pr-8 hover:text-emerald-600 transition-colors"
+                            >
+                                {availableYears.map(y => (
+                                    <option key={y} value={y}>{y}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+
+                    {/* Annual Performance Chart (Income vs Expense) */}
+                    <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                        <h3 className="text-lg font-bold text-slate-900 mb-8 uppercase tracking-tighter">Annual Performance</h3>
+                        <div className="h-[350px] w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={yearlyFiltered.monthlyPerformance} barGap={8}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 700, fill: '#94a3b8' }} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 700, fill: '#94a3b8' }} tickFormatter={(val) => `$${val}`} />
+                                    <Tooltip
+                                        cursor={{ fill: '#f8fafc' }}
+                                        contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                                    />
+                                    <Bar dataKey="income" name="Income" fill="#10b981" radius={[4, 4, 0, 0]} />
+                                    <Bar dataKey="expense" name="Spending" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Breakdown by Category */}
+                        <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                            <div className="flex items-center justify-between mb-8">
+                                <h3 className="text-lg font-bold text-slate-900 uppercase tracking-tight">Spending By Category</h3>
+                                <div className="px-3 py-1 bg-slate-900 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">Yearly Total</div>
+                            </div>
+                            <div className="space-y-4">
+                                {sortedYearlyByCategory.map((item, i) => (
+                                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border-l-4 border-slate-900 transition-transform hover:translate-x-1">
+                                        <span className="font-bold text-slate-700">{item.name}</span>
+                                        <span className="font-black text-slate-900 text-lg">${item.amount.toLocaleString()}</span>
+                                    </div>
+                                ))}
+                                {sortedYearlyByCategory.length === 0 && (
+                                    <div className="text-center py-12 text-slate-400 italic font-medium">No category data found for this year.</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Distribution Chart */}
+                        <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                            <h3 className="text-lg font-bold text-slate-900 mb-8">Yearly Distribution</h3>
+                            <div className="h-[250px]">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={yearlyDistData}
+                                            dataKey="amount"
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={50}
+                                            outerRadius={80}
+                                            paddingAngle={5}
+                                            stroke="none"
+                                        >
+                                            {yearlyDistData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                            <div className="space-y-3 mt-6">
+                                {yearlyDistData.map(item => (
+                                    <div key={item.name} className="flex items-center justify-between text-sm">
+                                        <span className="text-slate-500 font-bold uppercase tracking-wider">{item.name}</span>
+                                        <span className="font-black text-slate-900">${item.amount.toLocaleString()}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Savings Chart */}
+                    <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                        <div className="flex items-center justify-between mb-8">
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900 uppercase tracking-tighter">Savings Trend</h3>
+                                <p className="text-xs text-slate-400 mt-1 uppercase font-bold tracking-widest">Monthly Net Performance (Income - Spending)</p>
+                            </div>
+                        </div>
+                        <div className="h-[300px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={yearlyFiltered.monthlyPerformance}>
+                                    <defs>
+                                        <linearGradient id="colorSavings" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 700, fill: '#94a3b8' }} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 700, fill: '#94a3b8' }} tickFormatter={(val) => `$${val}`} />
+                                    <Tooltip
+                                        contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                                        labelStyle={{ fontWeight: 900, marginBottom: '4px' }}
+                                    />
+                                    <Area type="monotone" dataKey="savings" stroke="#10b981" strokeWidth={4} fillOpacity={1} fill="url(#colorSavings)" />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'summary' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card className="p-6">
+                        <h3 className="text-lg font-medium text-gray-900 mb-4">Financial Health</h3>
+                        <div className="space-y-4 text-sm">
+                            <div className="flex justify-between border-b pb-2">
+                                <span className="text-gray-500">Savings Rate</span>
+                                <span className="font-medium">
+                                    {stats.income > 0 ? (((stats.income - stats.expense) / stats.income) * 100).toFixed(1) : 0}%
+                                </span>
+                            </div>
+                            <div className="flex justify-between border-b pb-2">
+                                <span className="text-gray-500">Debt to Income (Credit Usage)</span>
+                                <span className="font-medium font-mono ">
+                                    {stats.income > 0 ? ((stats.credit / stats.income) * 100).toFixed(1) : 0}%
+                                </span>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+            )}
+        </div>
+    );
+}
