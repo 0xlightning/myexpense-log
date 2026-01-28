@@ -47,33 +47,29 @@ export default function Exchange() {
         <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase italic">
-                        <ArrowRightLeft className="text-indigo-600" size={32} />
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3 uppercase">
+                        <ArrowRightLeft className="text-[#0067ff]" size={28} />
                         Money Transfer
                     </h1>
-                    <p className="text-indigo-600/70 mt-1 font-medium tracking-wide">Move funds between your accounts securely.</p>
+                    <p className="text-slate-500 mt-1 font-medium">Move funds between your accounts securely.</p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Transfer Form - Styled as a "Card" visual */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white/70 border border-white/40 backdrop-blur-xl shadow-xl rounded-3xl p-8 sticky top-8 relative overflow-hidden">
-                        {/* Decorative background elements */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full filter blur-3xl -mr-16 -mt-16"></div>
-                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/5 rounded-full filter blur-3xl -ml-16 -mb-16"></div>
-
-                        <h2 className="text-xl font-black text-slate-900 mb-8 relative z-10 flex items-center gap-2 uppercase italic">
-                            <Send size={20} className="text-indigo-600" /> Transfer Details
+                    <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-8 sticky top-8 relative overflow-hidden">
+                        <h2 className="text-lg font-bold text-slate-900 mb-8 relative z-10 flex items-center gap-2 uppercase">
+                            <Send size={20} className="text-[#0067ff]" /> Transfer Details
                         </h2>
 
                         <form onSubmit={handleTransfer} className="space-y-6 relative z-10">
                             <div className="space-y-4">
                                 <div>
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Source Account</label>
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Source Account</label>
                                     <select
                                         required
-                                        className="w-full rounded-xl border border-slate-200 bg-white/50 px-4 py-3 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 outline-none transition-all appearance-none"
+                                        className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all appearance-none text-sm"
                                         value={fromCardId}
                                         onChange={(e) => setFromCardId(e.target.value)}
                                         style={{ backgroundImage: 'none' }}
@@ -94,10 +90,10 @@ export default function Exchange() {
                                 </div>
 
                                 <div>
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Destination Account</label>
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Destination Account</label>
                                     <select
                                         required
-                                        className="w-full rounded-xl border border-slate-200 bg-white/50 px-4 py-3 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 outline-none transition-all"
+                                        className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all text-sm"
                                         value={toCardId}
                                         onChange={(e) => setToCardId(e.target.value)}
                                     >
@@ -112,7 +108,7 @@ export default function Exchange() {
                             </div>
 
                             <div className="pt-4 border-t border-slate-100">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Amount</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Amount</label>
                                 <div className="relative">
                                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-light text-xl">$</span>
                                     <input
@@ -123,35 +119,35 @@ export default function Exchange() {
                                         value={amount}
                                         onChange={(e) => setAmount(e.target.value)}
                                         placeholder="0.00"
-                                        className="w-full bg-transparent border-0 text-3xl font-black text-slate-900 placeholder-slate-200 focus:ring-0 px-8 py-2 italic"
+                                        className="w-full bg-transparent border-0 text-3xl font-bold text-slate-900 placeholder-slate-200 focus:ring-0 px-8 py-2"
                                     />
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Date</label>
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Date</label>
                                     <input
                                         type="date"
                                         required
                                         value={date}
                                         onChange={(e) => setDate(e.target.value)}
-                                        className="w-full rounded-lg bg-white/50 border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:bg-white outline-none"
+                                        className="w-full rounded-lg bg-white border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#0067ff]/50"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Ref/Note</label>
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Ref/Note</label>
                                     <input
                                         type="text"
                                         value={notes}
                                         onChange={(e) => setNotes(e.target.value)}
                                         placeholder="Optional"
-                                        className="w-full rounded-lg bg-white/50 border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:bg-white outline-none placeholder-slate-300"
+                                        className="w-full rounded-lg bg-white border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none placeholder-slate-300 focus:border-[#0067ff]/50"
                                     />
                                 </div>
                             </div>
 
-                            <button type="submit" disabled={loading} className="w-full py-4 bg-indigo-600 text-white font-black rounded-xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all transform active:scale-95 uppercase italic">
+                            <button type="submit" disabled={loading} className="w-full py-4 bg-[#0067ff] text-white font-bold rounded-lg shadow-sm hover:bg-[#0056d6] transition-all transform active:scale-95 uppercase">
                                 {loading ? 'Processing...' : 'Confirm Transfer'}
                             </button>
                         </form>
@@ -160,14 +156,14 @@ export default function Exchange() {
 
                 {/* History */}
                 <div className="lg:col-span-2">
-                    <div className="bg-white/70 border border-white/40 backdrop-blur-xl shadow-xl rounded-3xl p-8 h-full">
-                        <h2 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-widest italic">
+                    <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-8 h-full">
+                        <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-widest">
                             <History size={24} className="text-slate-400" /> Recent Transfers
                         </h2>
 
                         <div className="space-y-4">
                             {transfers.map((t) => (
-                                <div key={t.id} className="group flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-100 hover:border-indigo-200 hover:shadow-lg transition-all">
+                                <div key={t.id} className="group flex items-center justify-between p-4 rounded-xl bg-white border border-slate-100 hover:border-[#0067ff]/30 hover:shadow-sm transition-all">
                                     <div className="flex items-center gap-4">
                                         <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-100 group-hover:bg-white transition-colors">
                                             <ArrowRightLeft size={20} className="text-indigo-600" />
@@ -204,9 +200,9 @@ export default function Exchange() {
                             ))}
 
                             {transfers.length === 0 && (
-                                <div className="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                                <div className="text-center py-20 bg-slate-50 rounded-xl border border-dashed border-slate-200">
                                     <Wallet size={48} className="mx-auto text-slate-300 mb-4" />
-                                    <p className="text-slate-400 font-black uppercase tracking-widest text-xs">No transfer history yet</p>
+                                    <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No transfer history yet</p>
                                 </div>
                             )}
                         </div>

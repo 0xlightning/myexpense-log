@@ -83,32 +83,32 @@ export default function Investments() {
     return (
         <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
             <div>
-                <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase italic">
-                    <TrendingUp className="text-indigo-600" size={32} />
+                <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3 uppercase">
+                    <TrendingUp className="text-[#0067ff]" size={28} />
                     Investments
                 </h1>
-                <p className="text-indigo-600/70 mt-1 font-medium tracking-wide">Track your assets and portfolio growth.</p>
+                <p className="text-slate-500 mt-1 font-medium">Track your assets and portfolio growth.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Form */}
                 <div className="lg:col-span-1">
-                    <Card className="p-8 sticky top-8 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
-                        <h2 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2 uppercase italic">
+                    <Card className="p-8 sticky top-8 bg-white border border-slate-200 shadow-sm">
+                        <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2 uppercase">
                             {editingId ? 'Edit Investment' : 'New Investment'}
                         </h2>
                         <form onSubmit={handleSubmit} className="space-y-5">
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Asset Name</label>
-                                <Input required value={name} onChange={e => setName(e.target.value)} placeholder="e.g. BTC, Apple Stock" className="bg-white/50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-indigo-500/20" />
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Asset Name</label>
+                                <Input required value={name} onChange={e => setName(e.target.value)} placeholder="e.g. BTC, Apple Stock" className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-[#0067ff]/10" />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Category</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Category</label>
                                 <select
                                     required
                                     value={category}
                                     onChange={e => setCategory(e.target.value)}
-                                    className="w-full rounded-xl border border-slate-200 bg-white/50 px-4 py-3 text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 outline-none transition-all appearance-none"
+                                    className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all appearance-none text-sm"
                                 >
                                     <option value="" className="bg-white text-slate-400">Select...</option>
                                     <option value="Crypto" className="bg-white text-slate-900">Crypto</option>
@@ -120,25 +120,24 @@ export default function Investments() {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Initial ($)</label>
-                                    <Input required type="number" step="0.01" value={initialAmount} onChange={e => setInitialAmount(e.target.value)} className="bg-white/50 border-slate-200 text-slate-900" />
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Initial ($)</label>
+                                    <Input required type="number" step="0.01" value={initialAmount} onChange={e => setInitialAmount(e.target.value)} className="bg-white border-slate-200 text-slate-900 text-sm" />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Current ($)</label>
-                                    <Input required type="number" step="0.01" value={currentValue} onChange={e => setCurrentValue(e.target.value)} className="bg-white/80 border-slate-200 font-black text-slate-900 focus:ring-indigo-500/20" />
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Current ($)</label>
+                                    <Input required type="number" step="0.01" value={currentValue} onChange={e => setCurrentValue(e.target.value)} className="bg-white border-slate-200 font-bold text-slate-900 focus:ring-[#0067ff]/10 text-sm" />
                                 </div>
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Date</label>
-                                <Input type="date" value={date} onChange={e => setDate(e.target.value)} className="bg-white/50 border-slate-200 text-slate-900" />
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Date</label>
+                                <Input type="date" value={date} onChange={e => setDate(e.target.value)} className="bg-white border-slate-200 text-slate-900" />
                             </div>
                             <div className="flex gap-3 mt-4">
-                                <Button type="submit" disabled={loading} className="flex-1 bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all h-12 text-base font-black uppercase italic">
-                                    {editingId ? <Save size={18} /> : <Plus size={18} />}
+                                <Button type="submit" disabled={loading} className="flex-1 bg-[#0067ff] hover:bg-[#0056d6] shadow-sm transition-all h-12 text-base font-bold uppercase">
                                     {editingId ? ' Update' : ' Add Asset'}
                                 </Button>
                                 {editingId && (
-                                    <Button type="button" variant="secondary" onClick={resetForm} className="px-6 rounded-xl bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">Cancel</Button>
+                                    <Button type="button" variant="secondary" onClick={resetForm} className="px-6 rounded-lg bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">Cancel</Button>
                                 )}
                             </div>
                         </form>
@@ -147,8 +146,8 @@ export default function Investments() {
 
                 {/* List */}
                 <div className="lg:col-span-2">
-                    <Card className="p-8 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
-                        <h2 className="text-xl font-black text-slate-900 mb-6 uppercase tracking-widest italic">Asset Portfolio</h2>
+                    <Card className="p-8 bg-white border border-slate-200 shadow-sm">
+                        <h2 className="text-lg font-bold text-slate-900 mb-6 uppercase tracking-widest">Asset Portfolio</h2>
                         <div className="space-y-4">
                             {investments.map(inv => {
                                 const gain = inv.currentValue - inv.initialAmount;
@@ -165,8 +164,8 @@ export default function Investments() {
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-lg font-black text-slate-900 tracking-tight">${inv.currentValue.toLocaleString()}</p>
-                                            <p className={`text-xs font-black px-2 py-0.5 rounded-full inline-block ${isProfit ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                                            <p className="text-lg font-bold text-slate-900 tracking-tight">${inv.currentValue.toLocaleString()}</p>
+                                            <p className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block uppercase tracking-wider ${isProfit ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
                                                 {isProfit ? '▲' : '▼'} {isProfit ? '+' : ''}${Math.abs(gain).toLocaleString()}
                                             </p>
                                         </div>

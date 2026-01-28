@@ -251,8 +251,8 @@ export default function Dashboard() {
         <div className="space-y-8 animate-fade-in">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase italic">Financial Command Center</h1>
-                    <p className="text-indigo-600/70 mt-1 font-medium tracking-wide">Real-time financial intelligence and lifetime analytics.</p>
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight uppercase">Financial Dashboard</h1>
+                    <p className="text-slate-500 mt-1 font-medium">Real-time financial intelligence and lifetime analytics.</p>
                 </div>
 
                 <Tabs
@@ -273,8 +273,7 @@ export default function Dashboard() {
                     {/* Summary Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {/* Net Worth - Premium Card */}
-                        <div className="relative group overflow-hidden bg-white/70 backdrop-blur-xl border border-white/40 rounded-2xl p-6 shadow-xl transition-transform hover:-translate-y-1">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-bl-[100px] opacity-10 group-hover:opacity-20 transition-opacity" />
+                        <div className="relative group overflow-hidden bg-white border border-slate-200 rounded-xl p-6 shadow-sm transition-all hover:border-[#0067ff]/30">
                             <div className="relative z-10">
                                 <div className="flex justify-between items-start mb-6">
                                     <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-100">
@@ -285,18 +284,17 @@ export default function Dashboard() {
                                     </span>
                                 </div>
 
-                                <p className="text-slate-500 font-medium text-sm">Total Net Worth</p>
-                                <h3 className="text-3xl font-black text-slate-900 mt-1 tracking-tight">
+                                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Total Net Worth</p>
+                                <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">
                                     ${netWorth.toLocaleString()}
                                 </h3>
                             </div>
                         </div>
 
                         {/* Income */}
-                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-6 border border-white/40 hover:bg-white/80 transition-all hover:-translate-y-1 shadow-xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-500/5 rounded-bl-full" />
+                        <div className="bg-white rounded-xl p-6 border border-slate-200 hover:border-emerald-500/30 transition-all shadow-sm relative overflow-hidden">
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-emerald-50 rounded-xl relative z-10 border border-emerald-100">
+                                <div className="p-3 bg-emerald-50 rounded-lg relative z-10 border border-emerald-100">
                                     <ArrowUpRight size={24} className="text-emerald-600" />
                                 </div>
                             </div>
@@ -307,10 +305,9 @@ export default function Dashboard() {
                         </div>
 
                         {/* Expense */}
-                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-6 border border-white/40 hover:bg-white/80 transition-all hover:-translate-y-1 shadow-xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-rose-500/5 rounded-bl-full" />
+                        <div className="bg-white rounded-xl p-6 border border-slate-200 hover:border-rose-500/30 transition-all shadow-sm relative overflow-hidden">
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-rose-50 rounded-xl relative z-10 border border-rose-100">
+                                <div className="p-3 bg-rose-50 rounded-lg relative z-10 border border-rose-100">
                                     <ArrowDownRight size={24} className="text-rose-600" />
                                 </div>
                             </div>
@@ -321,13 +318,11 @@ export default function Dashboard() {
                         </div>
 
                         {/* Credit */}
-                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-6 border border-white/40 hover:bg-white/80 transition-all hover:-translate-y-1 shadow-xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/5 rounded-bl-full" />
+                        <div className="bg-white rounded-xl p-6 border border-slate-200 hover:border-amber-500/30 transition-all shadow-sm relative overflow-hidden">
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-amber-50 rounded-xl relative z-10 border border-amber-100">
+                                <div className="p-3 bg-amber-50 rounded-lg relative z-10 border border-amber-100">
                                     <CreditCard size={24} className="text-amber-600" />
                                 </div>
-                                <Activity size={16} className="text-slate-300 relative z-10" />
                             </div>
                             <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest relative z-10">Credit Usage</p>
                             <h3 className="text-2xl font-black text-slate-900 mt-1 relative z-10">
@@ -339,9 +334,9 @@ export default function Dashboard() {
                     {/* Charts Details */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Main Chart */}
-                        <div className="lg:col-span-2 bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
+                        <div className="lg:col-span-2 bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
                             <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-lg font-black text-slate-900 uppercase tracking-widest">Spending Priority</h3>
+                                <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Spending Priority</h3>
                                 <div className="flex gap-2">
                                     {/* Legend could go here */}
                                 </div>
@@ -386,8 +381,8 @@ export default function Dashboard() {
                         </div>
 
                         {/* Side Chart */}
-                        <div className="lg:col-span-1 bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
-                            <h3 className="text-lg font-black text-slate-900 mb-8 uppercase tracking-widest">Distribution</h3>
+                        <div className="lg:col-span-1 bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                            <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Distribution</h3>
                             <div className="h-[300px] w-full relative">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
@@ -440,7 +435,7 @@ export default function Dashboard() {
                         <div>
                             <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase">
                                 {new Date(selectedMonth + '-01').toLocaleString('default', { month: 'long' })}
-                                <span className="text-slate-200 ml-3">{selectedMonth.split('-')[0]}</span>
+                                {" "}{selectedMonth.split('-')[0]}
                             </h2>
                             <p className="text-sm font-bold text-indigo-600/60 mt-1 uppercase tracking-widest">Monthly Performance Breakdown</p>
                         </div>
@@ -463,11 +458,10 @@ export default function Dashboard() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <Card className="p-6 bg-white/70 border-white/40 backdrop-blur-xl text-slate-900 relative overflow-hidden group shadow-xl">
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-bl-full" />
+                        <Card className="p-6 bg-white border border-slate-200 text-slate-900 relative overflow-hidden group shadow-sm">
                             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Net Worth</p>
-                            <h3 className="text-2xl font-black italic tracking-tight">${netWorth.toLocaleString()}</h3>
-                            <div className="mt-4 flex items-center gap-2 text-[10px] text-indigo-600 font-bold bg-indigo-50 w-fit px-2 py-1 rounded-full border border-indigo-100">
+                            <h3 className="text-2xl font-bold tracking-tight">${netWorth.toLocaleString()}</h3>
+                            <div className="mt-4 flex items-center gap-2 text-[10px] text-slate-600 font-bold bg-slate-100 w-fit px-2 py-1 rounded-full border border-slate-200">
                                 <Activity size={10} /> LIFETIME
                             </div>
                         </Card>
@@ -573,10 +567,10 @@ export default function Dashboard() {
                     {/* Header with Selected Year */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase">
-                                Year <span className="text-slate-200 ml-2">{selectedYear}</span>
+                            <h2 className="text-3xl font-bold text-slate-900 tracking-tight uppercase">
+                                Year {selectedYear}
                             </h2>
-                            <p className="text-sm font-bold text-indigo-600/60 mt-1 uppercase tracking-widest">Annual Financial Overview</p>
+                            <p className="text-sm font-bold text-slate-500 mt-1 uppercase tracking-widest">Annual Financial Overview</p>
                         </div>
 
                         {/* Year Filter Selector */}
@@ -617,31 +611,31 @@ export default function Dashboard() {
 
                     {/* Annual Summary Table - High Impact Totals */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="bg-white/70 backdrop-blur-xl p-6 rounded-2xl border border-white/40 shadow-xl flex items-center justify-between group hover:bg-emerald-50/50 transition-colors">
+                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-emerald-500/30 transition-all">
                             <div>
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Income</p>
-                                <p className="text-2xl font-black text-slate-900 group-hover:text-emerald-600 transition-colors italic">${yearlyFiltered.income.toLocaleString()}</p>
+                                <p className="text-2xl font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">${yearlyFiltered.income.toLocaleString()}</p>
                             </div>
-                            <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100 group-hover:bg-white transition-all">
+                            <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-100 group-hover:bg-white transition-all">
                                 <TrendingUp className="text-emerald-500" size={24} />
                             </div>
                         </div>
-                        <div className="bg-white/70 backdrop-blur-xl p-6 rounded-2xl border border-white/40 shadow-xl flex items-center justify-between group hover:bg-rose-50/50 transition-colors">
+                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-rose-500/30 transition-all">
                             <div>
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Expenses</p>
-                                <p className="text-2xl font-black text-slate-900 group-hover:text-rose-600 transition-colors italic">${yearlyFiltered.expense.toLocaleString()}</p>
+                                <p className="text-2xl font-bold text-slate-900 group-hover:text-rose-600 transition-colors">${yearlyFiltered.expense.toLocaleString()}</p>
                             </div>
-                            <div className="p-3 bg-rose-50 rounded-xl border border-rose-100 group-hover:bg-white transition-all">
+                            <div className="p-3 bg-rose-50 rounded-lg border border-rose-100 group-hover:bg-white transition-all">
                                 <TrendingDown className="text-rose-500" size={24} />
                             </div>
                         </div>
-                        <div className="bg-white/70 backdrop-blur-xl p-6 rounded-2xl border border-white/40 shadow-xl flex items-center justify-between group hover:bg-indigo-50/50 transition-colors">
+                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-[#0067ff]/30 transition-all">
                             <div>
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Yearly Savings</p>
-                                <p className="text-2xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors italic">${(yearlyFiltered.income - yearlyFiltered.expense).toLocaleString()}</p>
+                                <p className="text-2xl font-bold text-slate-900 group-hover:text-[#0067ff] transition-colors">${(yearlyFiltered.income - yearlyFiltered.expense).toLocaleString()}</p>
                             </div>
-                            <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-100 group-hover:bg-white transition-all">
-                                <Banknote className="text-indigo-500" size={24} />
+                            <div className="p-3 bg-blue-50 rounded-lg border border-blue-100 group-hover:bg-white transition-all">
+                                <Banknote className="text-[#0067ff]" size={24} />
                             </div>
                         </div>
                     </div>
@@ -655,9 +649,9 @@ export default function Dashboard() {
                             </div>
                             <div className="space-y-4">
                                 {sortedYearlyByCategory.map((item, i) => (
-                                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-100 transition-transform hover:translate-x-1 group hover:bg-white hover:shadow-sm">
-                                        <span className="font-bold text-slate-600 group-hover:text-slate-900 transition-colors capitalize">{item.name}</span>
-                                        <span className="font-black text-slate-900 text-lg italic tracking-tighter">${item.amount.toLocaleString()}</span>
+                                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-100 group hover:bg-white hover:border-[#0067ff]/20 hover:shadow-sm transition-all">
+                                        <span className="font-bold text-slate-600 group-hover:text-[#0067ff] transition-colors capitalize">{item.name}</span>
+                                        <span className="font-bold text-slate-900 text-lg tracking-tight">${item.amount.toLocaleString()}</span>
                                     </div>
                                 ))}
                                 {sortedYearlyByCategory.length === 0 && (
@@ -694,7 +688,7 @@ export default function Dashboard() {
                                 {yearlyDistData.map(item => (
                                     <div key={item.name} className="flex items-center justify-between text-sm group">
                                         <span className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">{item.name}</span>
-                                        <span className="font-black text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 transition-all group-hover:bg-indigo-50 italic tracking-tighter">${item.amount.toLocaleString()}</span>
+                                        <span className="font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 group-hover:bg-blue-50 group-hover:border-blue-100 transition-all tracking-tight">${item.amount.toLocaleString()}</span>
                                     </div>
                                 ))}
                             </div>
@@ -735,18 +729,18 @@ export default function Dashboard() {
 
             {activeTab === 'summary' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="p-8 bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl">
-                        <h3 className="text-xl font-black text-slate-900 mb-8 uppercase tracking-widest italic">Financial Health</h3>
+                    <Card className="p-8 bg-white border border-slate-200 shadow-sm">
+                        <h3 className="text-lg font-bold text-slate-900 mb-8 uppercase tracking-widest">Financial Health</h3>
                         <div className="space-y-6">
                             <div className="flex justify-between items-center group">
-                                <span className="text-slate-500 font-medium uppercase tracking-widest text-xs">Savings Rate</span>
-                                <span className="font-black text-2xl text-emerald-400 font-mono italic">
+                                <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">Savings Rate</span>
+                                <span className="font-bold text-2xl text-emerald-600 tracking-tight">
                                     {stats.income > 0 ? (((stats.income - stats.expense) / stats.income) * 100).toFixed(1) : 0}%
                                 </span>
                             </div>
                             <div className="flex justify-between items-center group">
-                                <span className="text-slate-500 font-medium uppercase tracking-widest text-xs">Debt To Income</span>
-                                <span className="font-black text-2xl text-amber-400 font-mono italic">
+                                <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">Debt To Income</span>
+                                <span className="font-bold text-2xl text-amber-600 tracking-tight">
                                     {stats.income > 0 ? ((stats.credit / stats.income) * 100).toFixed(1) : 0}%
                                 </span>
                             </div>

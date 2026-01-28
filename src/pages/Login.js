@@ -35,20 +35,16 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 flex items-center justify-center p-4 relative overflow-hidden font-sans">
-            {/* Background Decorative Elements */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/5 blur-[120px] rounded-full" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-500/5 blur-[120px] rounded-full" />
-
-            <Card className="w-full max-w-md p-10 bg-white/70 border-white/40 backdrop-blur-2xl shadow-2xl relative z-10 rounded-[2.5rem]">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 relative overflow-hidden font-sans">
+            <Card className="w-full max-w-md p-10 bg-white border border-slate-200 shadow-sm relative z-10 rounded-2xl">
                 <div className="flex flex-col items-center mb-10 text-center">
-                    <div className="bg-indigo-600 p-4 rounded-3xl mb-6 shadow-xl shadow-indigo-100 transform -rotate-6">
+                    <div className="bg-[#0067ff] p-4 rounded-2xl mb-6 shadow-sm">
                         <Wallet className="text-white w-10 h-10" />
                     </div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2 uppercase italic">
+                    <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-2 uppercase">
                         {isLogin ? 'Welcome Back' : 'Create Account'}
                     </h1>
-                    <p className="text-indigo-600/70 font-bold uppercase tracking-widest text-[10px]">
+                    <p className="text-slate-500 font-medium uppercase tracking-widest text-[10px]">
                         {isLogin ? 'Access your financial dashboard' : 'Start your journey to financial freedom'}
                     </p>
                 </div>
@@ -62,30 +58,30 @@ export default function Login() {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Email Address</label>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Email Address</label>
                         <Input
                             type="email"
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="name@example.com"
-                            className="bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-300 focus:bg-white focus:ring-indigo-500/10 h-14 rounded-2xl px-6 transition-all"
+                            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-300 focus:ring-[#0067ff]/10 h-14 rounded-xl px-6 transition-all"
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Secure Password</label>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-2">Secure Password</label>
                         <Input
                             type="password"
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"
-                            className="bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-300 focus:bg-white focus:ring-indigo-500/10 h-14 rounded-2xl px-6 transition-all"
+                            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-300 focus:ring-[#0067ff]/10 h-14 rounded-xl px-6 transition-all"
                         />
                     </div>
                     <Button
                         type="submit"
-                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-14 rounded-2xl font-black text-sm shadow-xl shadow-indigo-100 transition-all uppercase tracking-widest italic"
+                        className="w-full bg-[#0067ff] hover:bg-[#0056d6] text-white h-14 rounded-xl font-bold text-sm shadow-sm transition-all uppercase tracking-widest"
                         disabled={loading}
                     >
                         {loading ? (
@@ -101,12 +97,12 @@ export default function Login() {
                     <button
                         type="button"
                         onClick={() => setIsLogin(!isLogin)}
-                        className="text-[10px] font-black text-slate-400 hover:text-indigo-600 transition-all uppercase tracking-widest"
+                        className="text-[10px] font-bold text-slate-400 hover:text-[#0067ff] transition-all uppercase tracking-widest"
                     >
                         {isLogin ? (
-                            <>Don't have an account? <span className="text-indigo-600 decoration-indigo-600/30 underline underline-offset-4">Join Free</span></>
+                            <>Don't have an account? <span className="text-[#0067ff] decoration-[#0067ff]/30 underline underline-offset-4">Join Free</span></>
                         ) : (
-                            <>Already have an account? <span className="text-indigo-600 decoration-indigo-600/30 underline underline-offset-4">Sign In</span></>
+                            <>Already have an account? <span className="text-[#0067ff] decoration-[#0067ff]/30 underline underline-offset-4">Sign In</span></>
                         )}
                     </button>
                 </div>

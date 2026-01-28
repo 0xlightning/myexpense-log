@@ -3,14 +3,14 @@ import React from 'react';
 export function Table({ columns, data, onEdit, onDelete }) {
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200">
+                <thead className="bg-[#f8fafc]">
                     <tr>
                         {columns.map((col) => (
                             <th
                                 key={col.key}
                                 scope="col"
-                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                className="px-6 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest"
                             >
                                 {col.label}
                             </th>
@@ -22,11 +22,11 @@ export function Table({ columns, data, onEdit, onDelete }) {
                         )}
                     </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-slate-200">
                     {data.map((row) => (
                         <tr key={row.id}>
                             {columns.map((col) => (
-                                <td key={col.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td key={col.key} className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                                     {col.render ? col.render(row[col.key], row) : row[col.key]}
                                 </td>
                             ))}
@@ -35,7 +35,7 @@ export function Table({ columns, data, onEdit, onDelete }) {
                                     {onEdit && (
                                         <button
                                             onClick={() => onEdit(row)}
-                                            className="text-indigo-600 hover:text-indigo-900"
+                                            className="text-[#0067ff] hover:text-[#0056d6] font-bold text-xs uppercase"
                                         >
                                             Edit
                                         </button>
@@ -43,7 +43,7 @@ export function Table({ columns, data, onEdit, onDelete }) {
                                     {onDelete && (
                                         <button
                                             onClick={() => onDelete(row)}
-                                            className="text-red-600 hover:text-red-900"
+                                            className="text-rose-600 hover:text-rose-700 font-bold text-xs uppercase"
                                         >
                                             Delete
                                         </button>

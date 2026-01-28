@@ -65,10 +65,10 @@ export function Sidebar() {
                 isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
             )}>
                 <div className="p-8">
-                    <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 tracking-widest uppercase italic">
+                    <h1 className="text-2xl font-black text-white tracking-widest uppercase">
                         EXPENSIVE
                     </h1>
-                    <p className="text-xs text-slate-500 mt-2 font-black tracking-[0.2em] uppercase">Private Wealth</p>
+                    <p className="text-[10px] text-slate-500 mt-1 font-bold uppercase tracking-[0.2em]">Wealth Management</p>
                 </div>
 
                 <nav className="flex-1 px-4 space-y-2 overflow-y-auto py-4">
@@ -78,36 +78,25 @@ export function Sidebar() {
                             to={item.path}
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) => clsx(
-                                "flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group relative overflow-hidden",
+                                "flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-200 group relative",
                                 isActive
-                                    ? "text-white shadow-lg shadow-violet-500/10"
-                                    : "hover:text-white"
+                                    ? "text-[#0067ff] bg-[#0067ff]/10"
+                                    : "text-slate-400 hover:text-white hover:bg-white/5"
                             )}
                         >
                             {({ isActive }) => (
                                 <>
-                                    {/* Active Background w/ Gradient */}
-                                    {isActive && (
-                                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-cyan-600 opacity-100 transition-opacity" />
-                                    )}
-
-                                    {/* Hover Background */}
-                                    {!isActive && (
-                                        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    )}
-
                                     <item.icon
-                                        size={22}
+                                        size={20}
                                         className={clsx(
-                                            "relative z-10 transition-colors duration-300",
-                                            isActive ? "text-white" : "text-slate-400 group-hover:text-white"
+                                            "relative z-10 transition-colors duration-200",
+                                            isActive ? "text-[#0067ff]" : "text-slate-400 group-hover:text-white"
                                         )}
                                     />
-                                    <span className="relative z-10 font-medium tracking-wide">{item.name}</span>
+                                    <span className="relative z-10 font-bold tracking-tight text-sm">{item.name}</span>
 
-                                    {/* Active Indicator Glow */}
                                     {isActive && (
-                                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white/20 rounded-l-full blur-[2px]" />
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#0067ff] rounded-r-full" />
                                     )}
                                 </>
                             )}
@@ -117,12 +106,12 @@ export function Sidebar() {
 
                 <div className="p-4 m-4 rounded-2xl bg-white/5 border border-white/5">
                     <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-500 flex items-center justify-center text-white font-black text-sm shadow-xl">
+                        <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-black text-sm border border-slate-700">
                             {currentUser?.email?.[0].toUpperCase() || 'U'}
                         </div>
                         <div className="flex-1 overflow-hidden">
                             <p className="text-sm font-bold text-white truncate">{currentUser?.email}</p>
-                            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Premium Member</p>
+                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Premium Plan</p>
                         </div>
                     </div>
                     <button

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 export function Button({ className, variant = 'primary', size = 'md', children, ...props }) {
     const variants = {
-        primary: 'bg-blue-600 text-white hover:bg-blue-700',
+        primary: 'bg-[#0067ff] text-white hover:bg-[#0056d6] shadow-sm',
         secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
         danger: 'bg-red-500 text-white hover:bg-red-600',
         ghost: 'bg-transparent hover:bg-gray-100 text-gray-700'
