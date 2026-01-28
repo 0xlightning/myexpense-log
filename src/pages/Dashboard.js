@@ -441,12 +441,12 @@ export default function Dashboard() {
                         </div>
 
                         {/* Month Filter Selector */}
-                        <div className="flex items-center gap-4 bg-white/70 p-3 px-5 rounded-2xl border border-white/40 shadow-xl backdrop-blur-md">
+                        <div className="flex items-center gap-4 bg-white p-3 px-5 rounded-xl border border-slate-200 shadow-sm">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Select Period:</label>
                             <select
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="bg-transparent border-none text-sm font-bold text-slate-900 outline-none cursor-pointer pr-8 hover:text-indigo-600 transition-colors"
+                                className="bg-transparent border-none text-sm font-bold text-slate-900 outline-none cursor-pointer pr-8 hover:text-[#0067ff] transition-colors"
                             >
                                 {availableMonths.map(m => (
                                     <option key={m} value={m} className="bg-white text-slate-900">
@@ -465,15 +465,15 @@ export default function Dashboard() {
                                 <Activity size={10} /> LIFETIME
                             </div>
                         </Card>
-                        <Card className="p-6 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
+                        <Card className="p-6 bg-white border border-slate-200 shadow-sm">
                             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Monthly Income</p>
                             <h3 className="text-2xl font-bold text-emerald-600">${monthlyFiltered.income.toLocaleString()}</h3>
                         </Card>
-                        <Card className="p-6 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
+                        <Card className="p-6 bg-white border border-slate-200 shadow-sm">
                             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Monthly Spending</p>
                             <h3 className="text-2xl font-bold text-rose-600">${monthlyFiltered.expense.toLocaleString()}</h3>
                         </Card>
-                        <Card className="p-6 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
+                        <Card className="p-6 bg-white border border-slate-200 shadow-sm">
                             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Credit Usage</p>
                             <h3 className="text-2xl font-bold text-amber-600">${monthlyFiltered.credit.toLocaleString()}</h3>
                         </Card>
@@ -481,8 +481,8 @@ export default function Dashboard() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Monthly Bar Chart */}
-                        <div className="lg:col-span-2 bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl">
-                            <h3 className="text-lg font-black text-white mb-8 uppercase tracking-widest">Monthly Allocation</h3>
+                        <div className="lg:col-span-2 bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                            <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Monthly Allocation</h3>
                             <div className="h-[350px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={monthlyCategoryChartData} barSize={40}>
@@ -523,8 +523,8 @@ export default function Dashboard() {
                         </div>
 
                         {/* Monthly Distribution Pie Chart */}
-                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
-                            <h3 className="text-lg font-black text-slate-900 mb-8 uppercase tracking-widest">Monthly Split</h3>
+                        <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                            <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Monthly Split</h3>
                             <div className="h-[300px] relative">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
@@ -574,12 +574,12 @@ export default function Dashboard() {
                         </div>
 
                         {/* Year Filter Selector */}
-                        <div className="flex items-center gap-4 bg-white/70 p-3 px-5 rounded-2xl border border-white/40 shadow-xl backdrop-blur-md">
+                        <div className="flex items-center gap-4 bg-white p-3 px-5 rounded-xl border border-slate-200 shadow-sm">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Select Year:</label>
                             <select
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(e.target.value)}
-                                className="bg-transparent border-none text-sm font-bold text-slate-900 outline-none cursor-pointer pr-8 hover:text-indigo-600 transition-colors"
+                                className="bg-transparent border-none text-sm font-bold text-slate-900 outline-none cursor-pointer pr-8 hover:text-[#0067ff] transition-colors"
                             >
                                 {availableYears.map(y => (
                                     <option key={y} value={y} className="bg-white text-slate-900">{y}</option>
@@ -590,8 +590,8 @@ export default function Dashboard() {
 
 
                     {/* Annual Performance Chart (Income vs Expense) */}
-                    <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
-                        <h3 className="text-lg font-black text-slate-900 mb-8 uppercase tracking-widest">Annual Flux</h3>
+                    <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                        <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Annual Flux</h3>
                         <div className="h-[350px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={yearlyFiltered.monthlyPerformance} barGap={8}>
@@ -642,10 +642,10 @@ export default function Dashboard() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Breakdown by Category */}
-                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
+                        <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
                             <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-lg font-bold text-slate-900 uppercase tracking-tight">Category Spend</h3>
-                                <div className="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-lg uppercase tracking-widest border border-indigo-100">Yearly Total</div>
+                                <h3 className="text-base font-bold text-slate-900 uppercase tracking-tight">Category Spend</h3>
+                                <div className="px-3 py-1 bg-blue-50 text-[#0067ff] text-[10px] font-bold rounded-lg uppercase tracking-widest border border-blue-100">Yearly Total</div>
                             </div>
                             <div className="space-y-4">
                                 {sortedYearlyByCategory.map((item, i) => (
@@ -661,8 +661,8 @@ export default function Dashboard() {
                         </div>
 
                         {/* Distribution Chart */}
-                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
-                            <h3 className="text-lg font-black text-slate-900 mb-8 uppercase tracking-widest">Yearly Split</h3>
+                        <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                            <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Yearly Split</h3>
                             <div className="h-[250px]">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
@@ -696,10 +696,10 @@ export default function Dashboard() {
                     </div>
 
                     {/* Savings Chart */}
-                    <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
+                    <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
                         <div className="flex items-center justify-between mb-8">
                             <div>
-                                <h3 className="text-lg font-black text-slate-900 uppercase tracking-widest">Savings Velocity</h3>
+                                <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Savings Velocity</h3>
                                 <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-[0.2em]">Net Monthly Growth Rate</p>
                             </div>
                         </div>
