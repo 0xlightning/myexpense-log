@@ -7,7 +7,7 @@ import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Tabs } from '../components/ui/Tabs';
 import { format } from 'date-fns';
-import { TrendingUp, Plus, Calendar, DollarSign, Wallet2, Trash2, Edit3, Save } from 'lucide-react';
+import { TrendingUp, Plus, Calendar, DollarSign, Wallet2, Trash2, Edit3, Save, RotateCcw } from 'lucide-react';
 
 export default function Income() {
     const { currentUser } = useAuth();
@@ -102,6 +102,14 @@ export default function Income() {
                 await deleteTransaction(currentUser.uid, collections.income_records, item.id, item.cardId, item.amount, 'income');
             } catch (error) { console.error(error); alert("Failed to delete item"); }
         }
+    };
+
+    const handleItemRepeat = (item) => {
+        setEditingItem(null);
+        setSourceId(item.sourceId);
+        setCardId(item.cardId);
+        setAmount(item.amount);
+        setDate(format(new Date(), 'yyyy-MM-dd'));
     };
 
     return (
@@ -270,6 +278,7 @@ export default function Income() {
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <div className="flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button onClick={() => handleItemRepeat(item)} className="p-2 text-slate-400 hover:text-[#0067ff] bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110" title="Repeat Payment"><RotateCcw size={14} /></button>
                                                         <button onClick={() => handleItemEdit(item)} className="p-2 text-slate-400 hover:text-indigo-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Edit3 size={14} /></button>
                                                         <button onClick={() => handleItemDelete(item)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Trash2 size={14} /></button>
                                                     </div>
