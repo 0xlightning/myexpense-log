@@ -10,7 +10,7 @@ const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
 
 export default function Dashboard() {
     const { currentUser } = useAuth();
-    const [activeTab, setActiveTab] = useState('analytics');
+    const [activeTab, setActiveTab] = useState('all');
     const [loading, setLoading] = useState(true);
 
     // Data
@@ -156,6 +156,7 @@ export default function Dashboard() {
     const monthlyDistData = [
         { name: 'Income', amount: monthlyFiltered.income, fill: '#10b981' },
         { name: 'Spending', amount: monthlyFiltered.expense, fill: '#ef4444' },
+        { name: 'Investment', amount: monthlyFiltered.investment, fill: '#0067ff' },
         { name: 'Credit', amount: monthlyFiltered.credit, fill: '#f59e0b' }
     ];
 
@@ -181,6 +182,7 @@ export default function Dashboard() {
             acc.byCategory[catName] = (acc.byCategory[catName] || 0) + val;
         } else if (tx.type === 'investment') {
             acc.investment += val;
+            acc.monthlyPerformance[monthIndex].investment += val;
             acc.byCategory['Investments'] = (acc.byCategory['Investments'] || 0) + val;
         } else if (tx.type === 'credit_usage') {
             acc.credit += val;
@@ -200,6 +202,7 @@ export default function Dashboard() {
             name: new Date(0, i).toLocaleString('default', { month: 'short' }),
             income: 0,
             expense: 0,
+            investment: 0,
             savings: 0
         }))
     });
@@ -231,6 +234,7 @@ export default function Dashboard() {
     const lifetimeDistData = [
         { name: 'Income', amount: stats.income, fill: '#10b981' },
         { name: 'Expense', amount: stats.expense, fill: '#ef4444' },
+        { name: 'Investment', amount: stats.investment, fill: '#0067ff' },
         { name: 'Credit Used', amount: stats.credit, fill: '#f59e0b' }
     ];
 
@@ -271,7 +275,7 @@ export default function Dashboard() {
 
                 <Tabs
                     tabs={[
-                        { id: 'analytics', label: 'Analytics' },
+                        { id: 'all', label: 'All' },
                         { id: 'monthly', label: 'Monthly Analytics' },
                         { id: 'yearly', label: 'Yearly Analytics' },
                         { id: 'summary', label: 'Summary' }
@@ -282,10 +286,11 @@ export default function Dashboard() {
                 />
             </div>
 
-            {activeTab === 'analytics' && (
+
+            {activeTab === 'all' && (
                 <div className="space-y-8">
                     {/* Summary Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                         {/* Net Worth - Premium Card */}
                         <div className="relative group overflow-hidden bg-white border border-slate-200 rounded-xl p-6 shadow-sm transition-all hover:border-[#0067ff]/30">
                             <div className="relative z-10">
@@ -328,6 +333,19 @@ export default function Dashboard() {
                             <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest relative z-10">Total Spending</p>
                             <h3 className="text-2xl font-bold text-slate-900 mt-1 relative z-10">
                                 ${stats.expense.toLocaleString()}
+                            </h3>
+                        </div>
+
+                        {/* Investment */}
+                        <div className="bg-white rounded-xl p-6 border border-slate-200 hover:border-[#0067ff]/30 transition-all shadow-sm relative overflow-hidden">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="p-3 bg-blue-50 rounded-lg relative z-10 border border-blue-100">
+                                    <Briefcase size={24} className="text-[#0067ff]" />
+                                </div>
+                            </div>
+                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest relative z-10">Total Investment</p>
+                            <h3 className="text-2xl font-bold text-slate-900 mt-1 relative z-10">
+                                ${stats.investment.toLocaleString()}
                             </h3>
                         </div>
 
@@ -622,6 +640,7 @@ export default function Dashboard() {
                                     />
                                     <Bar dataKey="income" name="Income" fill="#10b981" radius={[4, 4, 0, 0]} />
                                     <Bar dataKey="expense" name="Spending" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                                    <Bar dataKey="investment" name="Investment" fill="#0067ff" radius={[4, 4, 0, 0]} />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
