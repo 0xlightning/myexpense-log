@@ -11,7 +11,7 @@ import { TrendingUp, Plus, Calendar, DollarSign, Wallet2, Trash2, Edit3, Save } 
 
 export default function Income() {
     const { currentUser } = useAuth();
-    const [activeTab, setActiveTab] = useState('source');
+    const [activeTab, setActiveTab] = useState('income');
     const [loading, setLoading] = useState(false);
 
     // --- Data State ---
@@ -115,7 +115,7 @@ export default function Income() {
                     <p className="text-indigo-600/70 mt-1 font-medium tracking-wide">Track your earnings and deposits with precision.</p>
                 </div>
                 <Tabs
-                    tabs={[{ id: 'source', label: 'History' }, { id: 'manage', label: 'Add Entry' }]}
+                    tabs={[{ id: 'income', label: 'History & Entry' }, { id: 'manage', label: 'Sources' }]}
                     activeTab={activeTab}
                     onChange={setActiveTab}
                     className="w-full md:w-auto min-w-[300px]"
@@ -123,9 +123,8 @@ export default function Income() {
             </div>
 
             {activeTab === 'manage' && (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Source Management Card */}
-                    <div className="lg:col-span-1">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="md:col-span-2">
                         <Card className="p-6 sticky top-8 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
                             <h2 className="text-lg font-black text-slate-900 mb-6 uppercase tracking-widest">Manage Sources</h2>
                             <form onSubmit={handleSourceSubmit} className="space-y-4">
@@ -137,7 +136,7 @@ export default function Income() {
                                             value={sourceName}
                                             onChange={(e) => setSourceName(e.target.value)}
                                             placeholder="e.g. Salary, Dividend"
-                                            className="bg-white/50 border-slate-200 text-slate-900 focus:ring-emerald-500/20"
+                                            className="bg-white/50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-emerald-500/20 transition-all"
                                         />
                                         <Button type="submit" disabled={loading} className="px-4 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-100">
                                             {editingSource ? <Save size={18} /> : <Plus size={18} />}
@@ -145,7 +144,6 @@ export default function Income() {
                                     </div>
                                 </div>
                             </form>
-
                             <div className="mt-8 space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Your Sources</h3>
                                 {sources.map(source => (
@@ -160,16 +158,19 @@ export default function Income() {
                             </div>
                         </Card>
                     </div>
+                </div>
+            )}
 
-                    {/* Transaction Entry Form */}
-                    <div className="lg:col-span-2">
-                        <Card className="p-8 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
+            {activeTab === 'income' && (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-1">
+                        <Card className="p-8 sticky top-8 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
                             <h2 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2 uppercase italic">
-                                {editingItem ? 'Edit Transaction' : 'Record New Income'}
+                                {editingItem ? 'Edit Income' : 'Add Income'}
                             </h2>
-                            <form onSubmit={handleItemSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <form onSubmit={handleItemSubmit} className="space-y-5">
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Income Source</label>
+                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Source</label>
                                     <select
                                         required
                                         value={sourceId}
@@ -192,7 +193,7 @@ export default function Income() {
                                             className="w-full rounded-xl border border-slate-200 bg-white/50 pl-11 pr-4 py-3 text-slate-900 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all disabled:bg-slate-50 disabled:opacity-50 appearance-none"
                                         >
                                             <option value="" className="bg-white text-slate-400">Select Account...</option>
-                                            {cards.map(c => <option key={c.id} value={c.id} className="bg-white text-slate-900">{c.name}</option>)}
+                                            {cards.map(c => <option key={c.id} value={c.id} className="bg-white text-slate-900">{c.name} (${c.balance})</option>)}
                                         </select>
                                     </div>
                                 </div>
@@ -225,12 +226,12 @@ export default function Income() {
                                         />
                                     </div>
                                 </div>
-                                <div className="md:col-span-2 flex gap-3 mt-4">
-                                    <Button type="submit" disabled={loading} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white h-12 rounded-xl text-base font-black shadow-xl shadow-emerald-200 transition-all hover:-translate-y-0.5 active:scale-[0.98] uppercase italic">
-                                        {loading ? 'Processing...' : (editingItem ? 'Update Record' : 'Confirm Deposit')}
+                                <div className="flex gap-3 mt-4">
+                                    <Button type="submit" disabled={loading} className="flex-1 bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-200 transition-all h-12 text-base font-black uppercase italic">
+                                        {loading ? 'Processing...' : (editingItem ? 'Update' : 'Confirm Income')}
                                     </Button>
                                     {editingItem && (
-                                        <Button type="button" variant="secondary" onClick={() => { setEditingItem(null); setSourceId(''); setCardId(''); setAmount(''); }} className="px-6 rounded-xl font-bold bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">
+                                        <Button type="button" variant="secondary" onClick={() => { setEditingItem(null); setSourceId(''); setCardId(''); setAmount(''); }} className="px-6 rounded-xl bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 transition-all">
                                             Cancel
                                         </Button>
                                     )}
@@ -238,75 +239,56 @@ export default function Income() {
                             </form>
                         </Card>
                     </div>
-                </div>
-            )}
-
-            {activeTab === 'source' && (
-                <Card className="p-8 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
-                    <div className="flex items-center justify-between mb-8">
-                        <h2 className="text-xl font-black text-slate-900 tracking-tight uppercase italic">Transaction History</h2>
-                        <Button
-                            onClick={() => setActiveTab('manage')}
-                            className="group flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-full shadow-xl shadow-indigo-100 transition-all hover:scale-105 active:scale-95"
-                        >
-                            <div className="bg-white/20 p-1 rounded-full group-hover:rotate-90 transition-transform duration-300">
-                                <Plus size={16} />
+                    <div className="lg:col-span-2">
+                        <Card className="p-8 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
+                            <h2 className="text-xl font-black text-slate-900 mb-6 uppercase tracking-widest italic">Income History</h2>
+                            <div className="overflow-hidden rounded-xl border border-slate-200">
+                                <table className="w-full text-left text-sm">
+                                    <thead className="bg-slate-50 text-slate-500 border-b border-slate-200">
+                                        <tr>
+                                            <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px]">Date</th>
+                                            <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px]">Source</th>
+                                            <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px]">Deposited To</th>
+                                            <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-right">Amount</th>
+                                            <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100 bg-transparent">
+                                        {items.map((item) => (
+                                            <tr key={item.id} className="hover:bg-indigo-50/30 transition-colors group">
+                                                <td className="px-6 py-4 text-slate-900 font-bold">{format(new Date(item.date), 'MMM dd, yyyy')}</td>
+                                                <td className="px-6 py-4">
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                                        {sources.find(s => s.id === item.sourceId)?.name || 'Unknown'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-slate-500 font-medium">
+                                                    {cards.find(c => c.id === item.cardId)?.name || 'Unknown Card'}
+                                                </td>
+                                                <td className="px-6 py-4 text-right font-black text-emerald-600 italic">
+                                                    +${item.amount.toLocaleString()}
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    <div className="flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button onClick={() => handleItemEdit(item)} className="p-2 text-slate-400 hover:text-indigo-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Edit3 size={14} /></button>
+                                                        <button onClick={() => handleItemDelete(item)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Trash2 size={14} /></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {items.length === 0 && (
+                                            <tr>
+                                                <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
+                                                    No income records found.
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
                             </div>
-                            <span className="font-black uppercase tracking-[0.1em] text-xs">New Entry</span>
-                        </Button>
+                        </Card>
                     </div>
-
-                    <div className="overflow-hidden rounded-xl border border-slate-200 shadow-sm">
-                        <table className="w-full text-left text-sm">
-                            <thead className="bg-slate-50 text-slate-500 border-b border-slate-200">
-                                <tr>
-                                    <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px]">Date</th>
-                                    <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px]">Source</th>
-                                    <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px]">Deposited To</th>
-                                    <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-right">Amount</th>
-                                    <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 bg-transparent">
-                                {items.map((item) => (
-                                    <tr key={item.id} className="hover:bg-indigo-50/30 transition-colors group">
-                                        <td className="px-6 py-4 text-slate-900 font-bold">
-                                            {format(new Date(item.date), 'MMM dd, yyyy')}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-100">
-                                                {sources.find(s => s.id === item.sourceId)?.name || 'Unknown'}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-slate-500 font-medium">
-                                            {cards.find(c => c.id === item.cardId)?.name || 'Unknown Card'}
-                                        </td>
-                                        <td className="px-6 py-4 text-right font-black text-emerald-600 italic">
-                                            +${item.amount.toLocaleString()}
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button onClick={() => handleItemEdit(item)} className="p-2 text-slate-400 hover:text-indigo-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110">
-                                                    <Edit3 size={14} />
-                                                </button>
-                                                <button onClick={() => handleItemDelete(item)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110">
-                                                    <Trash2 size={14} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {items.length === 0 && (
-                                    <tr>
-                                        <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
-                                            No income records found.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </Card>
+                </div>
             )}
         </div>
     );
