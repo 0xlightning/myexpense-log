@@ -66,7 +66,7 @@ export function Sidebar() {
             )}>
                 <div className="p-8">
                     <h1 className="text-2xl font-black text-white tracking-widest uppercase">
-                        EXPENSIVE
+                        My Expense Log
                     </h1>
                     <p className="text-[10px] text-slate-500 mt-1 font-bold uppercase tracking-[0.2em]">Wealth Management</p>
                 </div>

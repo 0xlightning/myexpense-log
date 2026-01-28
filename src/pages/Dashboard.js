@@ -100,6 +100,10 @@ export default function Dashboard() {
                 const catName = categories.find(c => c.id === tx.categoryId)?.name || 'Uncategorized';
                 acc.byCategory[catName] = (acc.byCategory[catName] || 0) + val;
                 break;
+            case 'investment':
+                acc.investment += val;
+                acc.byCategory['Investments'] = (acc.byCategory['Investments'] || 0) + val;
+                break;
             case 'credit_usage':
                 acc.credit += val;
                 break;
@@ -107,7 +111,7 @@ export default function Dashboard() {
                 break;
         }
         return acc;
-    }, { income: 0, expense: 0, credit: 0, byCategory: {} });
+    }, { income: 0, expense: 0, investment: 0, credit: 0, byCategory: {} });
 
     // Charts for Lifetime Analytics
     const categoryChartData = Object.entries(stats.byCategory)
@@ -127,6 +131,10 @@ export default function Dashboard() {
             const catName = categories.find(c => c.id === tx.categoryId)?.name || 'Uncategorized';
             acc.byCategory[catName] = (acc.byCategory[catName] || 0) + val;
         }
+        else if (tx.type === 'investment') {
+            acc.investment += val;
+            acc.byCategory['Investments'] = (acc.byCategory['Investments'] || 0) + val;
+        }
         else if (tx.type === 'credit_usage') {
             acc.credit += val;
             if (!tx.isPaid) acc.unpaidCredit += val;
@@ -135,7 +143,7 @@ export default function Dashboard() {
             acc.byCategory[catName] = (acc.byCategory[catName] || 0) + val;
         }
         return acc;
-    }, { income: 0, expense: 0, credit: 0, unpaidCredit: 0, byCategory: {} });
+    }, { income: 0, expense: 0, investment: 0, credit: 0, unpaidCredit: 0, byCategory: {} });
 
     const monthlyCategoryChartData = Object.entries(monthlyFiltered.byCategory)
         .map(([name, amount], index) => ({
@@ -171,6 +179,9 @@ export default function Dashboard() {
             // Breakdown by Category
             const catName = categories.find(c => c.id === tx.categoryId)?.name || 'Uncategorized';
             acc.byCategory[catName] = (acc.byCategory[catName] || 0) + val;
+        } else if (tx.type === 'investment') {
+            acc.investment += val;
+            acc.byCategory['Investments'] = (acc.byCategory['Investments'] || 0) + val;
         } else if (tx.type === 'credit_usage') {
             acc.credit += val;
             if (!tx.isPaid) acc.unpaidCredit += val;
@@ -182,7 +193,7 @@ export default function Dashboard() {
         }
         return acc;
     }, {
-        income: 0, expense: 0, credit: 0, unpaidCredit: 0,
+        income: 0, expense: 0, investment: 0, credit: 0, unpaidCredit: 0,
         byName: {},
         byCategory: {},
         monthlyPerformance: Array.from({ length: 12 }, (_, i) => ({
@@ -193,12 +204,15 @@ export default function Dashboard() {
         }))
     });
 
-    // Finalize savings data
+    // Finalize savings data (Savings = Income - Expense - Investment for a true net savings)
+    // However, the chart shows Income vs Expense. Let's keep it as Income vs Expense for the Flux chart
+    // but update the savings line to be Net Flow. 
     yearlyFiltered.monthlyPerformance.forEach(m => m.savings = m.income - m.expense);
 
     const yearlyDistData = [
         { name: 'Income', amount: yearlyFiltered.income, fill: '#10b981' },
         { name: 'Spending', amount: yearlyFiltered.expense, fill: '#ef4444' },
+        { name: 'Investment', amount: yearlyFiltered.investment, fill: '#0067ff' },
         { name: 'Credit', amount: yearlyFiltered.credit, fill: '#f59e0b' }
     ];
 
@@ -457,7 +471,7 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                         <Card className="p-6 bg-white border border-slate-200 text-slate-900 relative overflow-hidden group shadow-sm">
                             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Net Worth</p>
                             <h3 className="text-2xl font-bold tracking-tight">${netWorth.toLocaleString()}</h3>
@@ -472,6 +486,10 @@ export default function Dashboard() {
                         <Card className="p-6 bg-white border border-slate-200 shadow-sm">
                             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Monthly Spending</p>
                             <h3 className="text-2xl font-bold text-rose-600">${monthlyFiltered.expense.toLocaleString()}</h3>
+                        </Card>
+                        <Card className="p-6 bg-white border border-slate-200 shadow-sm">
+                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Monthly Investment</p>
+                            <h3 className="text-2xl font-bold text-[#0067ff]">${monthlyFiltered.investment.toLocaleString()}</h3>
                         </Card>
                         <Card className="p-6 bg-white border border-slate-200 shadow-sm">
                             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Credit Usage</p>
@@ -610,7 +628,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* Annual Summary Table - High Impact Totals */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-emerald-500/30 transition-all">
                             <div>
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Income</p>
@@ -631,11 +649,20 @@ export default function Dashboard() {
                         </div>
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-[#0067ff]/30 transition-all">
                             <div>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Yearly Savings</p>
-                                <p className="text-2xl font-bold text-slate-900 group-hover:text-[#0067ff] transition-colors">${(yearlyFiltered.income - yearlyFiltered.expense).toLocaleString()}</p>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Investment</p>
+                                <p className="text-2xl font-bold text-slate-900 group-hover:text-[#0067ff] transition-colors">${yearlyFiltered.investment.toLocaleString()}</p>
                             </div>
                             <div className="p-3 bg-blue-50 rounded-lg border border-blue-100 group-hover:bg-white transition-all">
-                                <Banknote className="text-[#0067ff]" size={24} />
+                                <Briefcase className="text-[#0067ff]" size={24} />
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-amber-500/30 transition-all">
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Net Cash Flow</p>
+                                <p className="text-2xl font-bold text-slate-900 group-hover:text-amber-600 transition-colors">${(yearlyFiltered.income - (yearlyFiltered.expense + yearlyFiltered.investment)).toLocaleString()}</p>
+                            </div>
+                            <div className="p-3 bg-amber-50 rounded-lg border border-amber-100 group-hover:bg-white transition-all">
+                                <Banknote className="text-amber-500" size={24} />
                             </div>
                         </div>
                     </div>
@@ -728,24 +755,118 @@ export default function Dashboard() {
             )}
 
             {activeTab === 'summary' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="p-8 bg-white border border-slate-200 shadow-sm">
-                        <h3 className="text-lg font-bold text-slate-900 mb-8 uppercase tracking-widest">Financial Health</h3>
-                        <div className="space-y-6">
-                            <div className="flex justify-between items-center group">
-                                <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">Savings Rate</span>
-                                <span className="font-bold text-2xl text-emerald-600 tracking-tight">
-                                    {stats.income > 0 ? (((stats.income - stats.expense) / stats.income) * 100).toFixed(1) : 0}%
-                                </span>
+                <div className="space-y-8 animate-fade-in">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <Card className="p-8 bg-white border border-slate-200 shadow-sm relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-[80px] -mr-8 -mt-8 transition-all group-hover:scale-110 opacity-50" />
+                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Monthly Net Flow</p>
+                            <h3 className={`text-3xl font-bold tracking-tight ${(monthlyFiltered.income - (monthlyFiltered.expense + monthlyFiltered.investment)) >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                ${(monthlyFiltered.income - (monthlyFiltered.expense + monthlyFiltered.investment)).toLocaleString()}
+                            </h3>
+                            <p className="text-[10px] text-slate-400 mt-2 font-medium">Income - (Spending + Investments)</p>
+                        </Card>
+
+                        <Card className="p-8 bg-white border border-slate-200 shadow-sm relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-[80px] -mr-8 -mt-8 transition-all group-hover:scale-110 opacity-50" />
+                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Investment Intensity</p>
+                            <h3 className="text-3xl font-bold text-[#0067ff] tracking-tight">
+                                {monthlyFiltered.income > 0 ? ((monthlyFiltered.investment / monthlyFiltered.income) * 100).toFixed(1) : 0}%
+                            </h3>
+                            <p className="text-[10px] text-slate-400 mt-2 font-medium">Percentage of income invested</p>
+                        </Card>
+
+                        <Card className="p-8 bg-white border border-slate-200 shadow-sm relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-[80px] -mr-8 -mt-8 transition-all group-hover:scale-110 opacity-50" />
+                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Savings Rate</p>
+                            <h3 className="text-3xl font-bold text-amber-600 tracking-tight">
+                                {monthlyFiltered.income > 0 ? (((monthlyFiltered.income - monthlyFiltered.expense) / monthlyFiltered.income) * 100).toFixed(1) : 0}%
+                            </h3>
+                            <p className="text-[10px] text-slate-400 mt-2 font-medium">Liquid savings before investments</p>
+                        </Card>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <Card className="p-8 bg-white border border-slate-200 shadow-sm">
+                            <div className="flex items-center justify-between mb-8">
+                                <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Financial Health Indices</h3>
+                                <Activity className="text-slate-300" size={20} />
                             </div>
-                            <div className="flex justify-between items-center group">
-                                <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">Debt To Income</span>
-                                <span className="font-bold text-2xl text-amber-600 tracking-tight">
-                                    {stats.income > 0 ? ((stats.credit / stats.income) * 100).toFixed(1) : 0}%
-                                </span>
+                            <div className="space-y-6">
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                                        <span>Debt-to-Income</span>
+                                        <span className={monthlyFiltered.income > 0 && (monthlyFiltered.credit / monthlyFiltered.income) > 0.4 ? 'text-rose-500' : 'text-slate-900'}>
+                                            {monthlyFiltered.income > 0 ? ((monthlyFiltered.credit / monthlyFiltered.income) * 100).toFixed(1) : 0}%
+                                        </span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                                        <div className="h-full bg-amber-500 rounded-full" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.credit / monthlyFiltered.income) * 100 : 0))}%` }} />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                                        <span>Expense Ratio</span>
+                                        <span className="text-slate-900">
+                                            {monthlyFiltered.income > 0 ? ((monthlyFiltered.expense / monthlyFiltered.income) * 100).toFixed(1) : 0}%
+                                        </span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                                        <div className="h-full bg-rose-500 rounded-full" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.expense / monthlyFiltered.income) * 100 : 0))}%` }} />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                                        <span>Capital Deployment</span>
+                                        <span className="text-[#0067ff]">
+                                            {monthlyFiltered.income > 0 ? ((monthlyFiltered.investment / monthlyFiltered.income) * 100).toFixed(1) : 0}%
+                                        </span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                                        <div className="h-full bg-[#0067ff] rounded-full" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.investment / monthlyFiltered.income) * 100 : 0))}%` }} />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </Card>
+                        </Card>
+
+                        <Card className="p-8 bg-white border border-slate-200 shadow-sm">
+                            <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Smart Insights</h3>
+                            <div className="space-y-4">
+                                {(monthlyFiltered.income - (monthlyFiltered.expense + monthlyFiltered.investment)) > 0 ? (
+                                    <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex gap-4">
+                                        <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
+                                            <TrendingUp size={20} />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-emerald-900">Positive Cash Flow</p>
+                                            <p className="text-xs text-emerald-700/70 mt-0.5 font-medium">You have surplus capital to invest or save.</p>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="p-4 bg-rose-50 rounded-xl border border-rose-100 flex gap-4">
+                                        <div className="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center text-rose-600 shrink-0">
+                                            <TrendingDown size={20} />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-rose-900">Negative Cash Flow</p>
+                                            <p className="text-xs text-rose-700/70 mt-0.5 font-medium">Outflow exceeds inflow this month.</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 flex gap-4">
+                                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-[#0067ff] shrink-0">
+                                        <Banknote size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-bold text-blue-900">Net Worth Stability</p>
+                                        <p className="text-xs text-blue-700/70 mt-0.5 font-medium">Your assets cover {netWorth > 0 ? (netWorth / (monthlyFiltered.expense || 1)).toFixed(1) : 0} months of current spending.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+                    </div>
                 </div>
             )}
         </div>

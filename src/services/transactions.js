@@ -288,16 +288,62 @@ export const createCard = async (userId, { name, type, initialBalance, creditLim
 };
 
 /**
- * Reverses a transaction (Income/Expense) and deletes the record.
- * @param {string} type 'income' | 'expense'
+ * Adds an investment record and updates the corresponding card balance atomically.
+ */
+export const addInvestmentTransaction = async (userId, { amount, date, cardId, category, notes }) => {
+    try {
+        await runTransaction(db, async (transaction) => {
+            const cardRef = doc(db, `users/${userId}/${collections.cards}`, cardId);
+            const investRef = doc(collection(db, `users/${userId}/${collections.investments}`));
+            const ledgerRef = doc(collection(db, `users/${userId}/${collections.transactions}`));
+
+            const cardDoc = await transaction.get(cardRef);
+            if (!cardDoc.exists()) throw new Error("Card does not exist!");
+
+            const currentBalance = cardDoc.data().balance || 0;
+            const newBalance = currentBalance - amount;
+
+            // Update Card Balance
+            transaction.update(cardRef, { balance: newBalance });
+
+            // Create Investment Record
+            transaction.set(investRef, {
+                amount,
+                date,
+                cardId,
+                category: category || 'General',
+                notes: notes || '',
+                createdAt: serverTimestamp()
+            });
+
+            // Create Ledger Entry
+            transaction.set(ledgerRef, {
+                type: 'investment',
+                amount,
+                date,
+                cardId,
+                category: category,
+                refId: investRef.id,
+                description: `Investment in ${category}`,
+                createdAt: serverTimestamp()
+            });
+        });
+        console.log("Investment transaction completed successfully.");
+    } catch (e) {
+        console.error("Investment transaction failed: ", e);
+        throw e;
+    }
+};
+
+/**
+ * Reverses a transaction (Income/Expense/Investment) and deletes the record.
+ * @param {string} type 'income' | 'expense' | 'investment'
  */
 export const deleteTransaction = async (userId, collectionName, itemId, cardId, amount, type) => {
     try {
         await runTransaction(db, async (transaction) => {
             const itemRef = doc(db, `users/${userId}/${collectionName}`, itemId);
             const cardRef = doc(db, `users/${userId}/${collections.cards}`, cardId);
-            // We should also find and void the ledger entry, but technically one record might have multiple ledger entries?
-            // tailored for simple 1-to-1.
 
             const cardDoc = await transaction.get(cardRef);
             if (!cardDoc.exists()) throw new Error("Card not found");
@@ -307,18 +353,15 @@ export const deleteTransaction = async (userId, collectionName, itemId, cardId, 
 
             // Reverse logic
             if (type === 'income') {
-                // Income added to balance, so we subtract
                 newBalance = currentBalance - amount;
-            } else if (type === 'expense') {
-                // Expense subtracted from balance, so we add
+            } else if (type === 'expense' || type === 'investment') {
+                // Both expense and investment subtract from balance, so we add back
                 newBalance = currentBalance + amount;
             }
 
             transaction.update(cardRef, { balance: newBalance });
             transaction.delete(itemRef);
 
-            // We could also add a 'reversal' ledger entry, or delete the old one. 
-            // For a true ledger, we add a reversal.
             const ledgerRef = doc(collection(db, `users/${userId}/${collections.transactions}`));
             transaction.set(ledgerRef, {
                 type: 'reversal',
@@ -329,7 +372,6 @@ export const deleteTransaction = async (userId, collectionName, itemId, cardId, 
                 description: `Reversal of ${type} ${itemId}`,
                 createdAt: serverTimestamp()
             });
-
         });
     } catch (e) {
         console.error("Delete transaction failed:", e);
