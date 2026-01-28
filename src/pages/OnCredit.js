@@ -77,44 +77,44 @@ export default function OnCredit() {
         <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-                        <ArrowUpRight className="text-amber-400" size={32} />
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase italic">
+                        <ArrowUpRight className="text-amber-600" size={32} />
                         On Credit
                     </h1>
-                    <p className="text-amber-300/80 mt-1 font-medium italic">Track pending payments and credit card usage with ease.</p>
+                    <p className="text-indigo-600/70 mt-1 font-medium tracking-wide">Track pending payments and credit card usage with ease.</p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Form Section */}
                 <div className="lg:col-span-1">
-                    <Card className="p-8 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl sticky top-8">
-                        <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <Card className="p-8 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl sticky top-8">
+                        <h2 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2 uppercase italic">
                             {editingDebt ? 'Edit Record' : 'Log New Debt'}
                         </h2>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Credit Card</label>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Credit Card</label>
                                 <div className="relative">
-                                    <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" size={18} />
+                                    <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                                     <select
                                         required
                                         value={cardId}
                                         onChange={(e) => setCardId(e.target.value)}
                                         disabled={editingDebt}
-                                        className="w-full rounded-xl border border-white/10 bg-white/5 pl-11 pr-4 py-3 text-white focus:bg-white/10 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all disabled:bg-white/10 disabled:opacity-50 appearance-none"
+                                        className="w-full rounded-xl border border-slate-200 bg-white/50 pl-11 pr-4 py-3 text-slate-900 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 outline-none transition-all disabled:bg-slate-50 disabled:opacity-50 appearance-none"
                                     >
-                                        <option value="" className="bg-slate-900 text-indigo-300">Select Card...</option>
+                                        <option value="" className="bg-white text-slate-400">Select Card...</option>
                                         {cards.map(c => (
-                                            <option key={c.id} value={c.id} className="bg-slate-900 text-white">
+                                            <option key={c.id} value={c.id} className="bg-white text-slate-900">
                                                 {c.name} (Limit: ${c.creditLimit})
                                             </option>
                                         ))}
                                     </select>
                                 </div>
                                 {cards.length === 0 && (
-                                    <div className="flex items-center gap-2 text-xs text-amber-400 bg-amber-500/10 p-3 rounded-xl mt-2 border border-amber-500/20 leading-relaxed">
+                                    <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 p-3 rounded-xl mt-2 border border-amber-100 leading-relaxed font-bold">
                                         <AlertCircle size={14} className="shrink-0" />
                                         <span>No active credit cards found. Please add a method first.</span>
                                     </div>
@@ -122,9 +122,9 @@ export default function OnCredit() {
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Amount</label>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Amount</label>
                                 <div className="relative">
-                                    <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400" size={18} />
+                                    <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-600" size={18} />
                                     <Input
                                         type="number"
                                         required
@@ -133,37 +133,37 @@ export default function OnCredit() {
                                         onChange={(e) => setAmount(e.target.value)}
                                         disabled={editingDebt}
                                         placeholder="0.00"
-                                        className="pl-11 bg-white/10 border-white/20 font-bold text-lg text-amber-400 focus:bg-white/20"
+                                        className="pl-11 bg-white/80 border-slate-200 font-black text-lg text-amber-600 focus:ring-amber-500/20"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Date</label>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Date</label>
                                 <div className="relative">
-                                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" size={18} />
+                                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                                     <Input
                                         type="date"
                                         required
                                         value={date}
                                         onChange={(e) => setDate(e.target.value)}
-                                        className="pl-11 bg-white/5 border-white/10 text-white focus:bg-white/10"
+                                        className="pl-11 bg-white/50 border-slate-200 text-slate-900 focus:border-amber-500/50"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Notes / Item</label>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Notes / Item</label>
                                 <Input
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
                                     placeholder="What did you buy?"
-                                    className="bg-white/5 border-white/10 text-white focus:bg-white/10"
+                                    className="bg-white/50 border-slate-200 text-slate-900"
                                 />
                             </div>
 
                             <div className="flex gap-3 pt-2">
-                                <Button type="submit" disabled={loading || cards.length === 0} className="flex-1 bg-amber-500 hover:bg-amber-600 hover:shadow-lg hover:shadow-amber-500/30 transition-all h-12 text-base text-white font-bold rounded-xl">
+                                <Button type="submit" disabled={loading || cards.length === 0} className="flex-1 bg-amber-500 hover:bg-amber-600 shadow-xl shadow-amber-200 transition-all h-12 text-base text-white font-black rounded-xl uppercase italic">
                                     {loading ? 'Saving...' : (editingDebt ? 'Update Record' : 'Confirm Debt')}
                                 </Button>
                                 {editingDebt && (
@@ -172,7 +172,7 @@ export default function OnCredit() {
                                         setAmount('');
                                         setCardId('');
                                         setNotes('');
-                                    }} className="px-6 rounded-xl bg-white/5 text-indigo-300 border-white/10 hover:bg-white/10">
+                                    }} className="px-6 rounded-xl bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">
                                         Cancel
                                     </Button>
                                 )}
@@ -183,36 +183,36 @@ export default function OnCredit() {
 
                 {/* List Section */}
                 <div className="lg:col-span-2">
-                    <Card className="p-8 bg-white/5 border-white/10 backdrop-blur-xl h-full">
-                        <h2 className="text-xl font-bold text-white mb-6">Recent Unpaid Records</h2>
-                        <div className="overflow-hidden rounded-xl border border-white/5">
+                    <Card className="p-8 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl h-full">
+                        <h2 className="text-xl font-black text-slate-900 mb-6 uppercase tracking-widest italic">Recent Unpaid Records</h2>
+                        <div className="overflow-hidden rounded-xl border border-slate-200">
                             <table className="w-full text-left text-sm">
-                                <thead className="bg-white/5 text-indigo-300">
+                                <thead className="bg-slate-50 text-slate-500 border-b border-slate-200">
                                     <tr>
-                                        <th className="px-6 py-4 font-bold uppercase tracking-wider text-xs">Date</th>
-                                        <th className="px-6 py-4 font-bold uppercase tracking-wider text-xs">Description</th>
-                                        <th className="px-6 py-4 font-bold uppercase tracking-wider text-xs">Card</th>
-                                        <th className="px-6 py-4 font-bold uppercase tracking-wider text-xs text-right">Amount</th>
-                                        <th className="px-6 py-4 font-bold uppercase tracking-wider text-xs text-right">Actions</th>
+                                        <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px]">Date</th>
+                                        <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px]">Description</th>
+                                        <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px]">Card</th>
+                                        <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-right">Amount</th>
+                                        <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-right">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-white/5 bg-transparent">
+                                <tbody className="divide-y divide-slate-100 bg-transparent">
                                     {debts.map((item) => (
-                                        <tr key={item.id} className="hover:bg-white/5 transition-colors group">
-                                            <td className="px-6 py-4 text-white font-bold">{format(new Date(item.date), 'MMM dd, yyyy')}</td>
-                                            <td className="px-6 py-4 text-white/70">{item.notes || '-'}</td>
-                                            <td className="px-6 py-4 text-slate-300">
-                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-500/10 text-indigo-400 border border-white/5">
+                                        <tr key={item.id} className="hover:bg-indigo-50/30 transition-colors group">
+                                            <td className="px-6 py-4 text-slate-900 font-bold">{format(new Date(item.date), 'MMM dd, yyyy')}</td>
+                                            <td className="px-6 py-4 text-slate-500 font-medium">{item.notes || '-'}</td>
+                                            <td className="px-6 py-4">
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black uppercase bg-indigo-50 text-indigo-600 border border-indigo-100">
                                                     {cards.find(c => c.id === item.cardId)?.name || 'Unknown'}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-right font-black text-amber-400">
+                                            <td className="px-6 py-4 text-right font-black text-amber-600 italic">
                                                 ${item.amount.toLocaleString()}
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button onClick={() => handleEdit(item)} className="p-2 text-indigo-300 hover:text-indigo-400 bg-white/5 border border-transparent hover:border-white/10 rounded-lg transition-all"><Edit3 size={14} /></button>
-                                                    <button onClick={() => handleDelete(item)} className="p-2 text-rose-300 hover:text-rose-400 bg-white/5 border border-transparent hover:border-white/10 rounded-lg transition-all"><Trash2 size={14} /></button>
+                                                <div className="flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button onClick={() => handleEdit(item)} className="p-2 text-slate-400 hover:text-indigo-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Edit3 size={14} /></button>
+                                                    <button onClick={() => handleDelete(item)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Trash2 size={14} /></button>
                                                 </div>
                                             </td>
                                         </tr>

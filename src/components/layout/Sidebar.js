@@ -61,14 +61,14 @@ export function Sidebar() {
 
             {/* Sidebar */}
             <div className={twMerge(
-                "fixed top-0 left-0 h-full w-72 bg-slate-900/80 backdrop-blur-md text-slate-300 flex flex-col transition-transform duration-300 z-40 border-r border-white/10 shadow-2xl",
+                "fixed top-0 left-0 h-full w-72 bg-slate-950 text-slate-300 flex flex-col transition-transform duration-300 z-40 border-r border-slate-800 shadow-2xl",
                 isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
             )}>
                 <div className="p-8">
-                    <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 tracking-wider">
+                    <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 tracking-widest uppercase italic">
                         EXPENSIVE
                     </h1>
-                    <p className="text-xs text-indigo-300/80 mt-2 font-black tracking-[0.2em] uppercase">PREMIUM TRACKER</p>
+                    <p className="text-xs text-slate-500 mt-2 font-black tracking-[0.2em] uppercase">Private Wealth</p>
                 </div>
 
                 <nav className="flex-1 px-4 space-y-2 overflow-y-auto py-4">
@@ -88,7 +88,7 @@ export function Sidebar() {
                                 <>
                                     {/* Active Background w/ Gradient */}
                                     {isActive && (
-                                        <div className="absolute inset-0 bg-gradient-to-r from-violet-600/90 to-indigo-600/90 opacity-100 transition-opacity" />
+                                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-cyan-600 opacity-100 transition-opacity" />
                                     )}
 
                                     {/* Hover Background */}
@@ -100,7 +100,7 @@ export function Sidebar() {
                                         size={22}
                                         className={clsx(
                                             "relative z-10 transition-colors duration-300",
-                                            isActive ? "text-white" : "text-indigo-200/50 group-hover:text-white"
+                                            isActive ? "text-white" : "text-slate-400 group-hover:text-white"
                                         )}
                                     />
                                     <span className="relative z-10 font-medium tracking-wide">{item.name}</span>
@@ -115,14 +115,14 @@ export function Sidebar() {
                     ))}
                 </nav>
 
-                <div className="p-4 m-4 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm">
+                <div className="p-4 m-4 rounded-2xl bg-white/5 border border-white/5">
                     <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm shadow-lg ring-2 ring-white/10">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-500 flex items-center justify-center text-white font-black text-sm shadow-xl">
                             {currentUser?.email?.[0].toUpperCase() || 'U'}
                         </div>
                         <div className="flex-1 overflow-hidden">
-                            <p className="text-sm font-semibold text-white truncate">{currentUser?.email}</p>
-                            <p className="text-xs text-violet-300 font-bold uppercase tracking-tighter">Pro Plan</p>
+                            <p className="text-sm font-bold text-white truncate">{currentUser?.email}</p>
+                            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Premium Member</p>
                         </div>
                     </div>
                     <button

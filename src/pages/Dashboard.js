@@ -251,8 +251,8 @@ export default function Dashboard() {
         <div className="space-y-8 animate-fade-in">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black text-white tracking-tight uppercase italic">Financial Command Center</h1>
-                    <p className="text-indigo-300/80 mt-1 font-medium tracking-wide">Real-time financial intelligence and lifetime analytics.</p>
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase italic">Financial Command Center</h1>
+                    <p className="text-indigo-600/70 mt-1 font-medium tracking-wide">Real-time financial intelligence and lifetime analytics.</p>
                 </div>
 
                 <Tabs
@@ -273,64 +273,64 @@ export default function Dashboard() {
                     {/* Summary Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {/* Net Worth - Premium Card */}
-                        <div className="relative group overflow-hidden bg-gray-900 rounded-2xl p-6 shadow-xl transition-transform hover:-translate-y-1">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-bl-[100px] opacity-20 group-hover:opacity-30 transition-opacity" />
+                        <div className="relative group overflow-hidden bg-white/70 backdrop-blur-xl border border-white/40 rounded-2xl p-6 shadow-xl transition-transform hover:-translate-y-1">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-bl-[100px] opacity-10 group-hover:opacity-20 transition-opacity" />
                             <div className="relative z-10">
                                 <div className="flex justify-between items-start mb-6">
-                                    <div className="p-3 bg-gray-800/50 rounded-xl backdrop-blur-sm border border-white/5">
-                                        <Wallet size={24} className="text-violet-400" />
+                                    <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                                        <Wallet size={24} className="text-indigo-600" />
                                     </div>
-                                    <span className="flex items-center gap-1 text-xs font-medium text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full">
+                                    <span className="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">
                                         <TrendingUp size={12} /> Live
                                     </span>
                                 </div>
 
-                                <p className="text-gray-400 font-medium text-sm">Total Net Worth</p>
-                                <h3 className="text-3xl font-bold text-white mt-1 tracking-tight">
+                                <p className="text-slate-500 font-medium text-sm">Total Net Worth</p>
+                                <h3 className="text-3xl font-black text-slate-900 mt-1 tracking-tight">
                                     ${netWorth.toLocaleString()}
                                 </h3>
                             </div>
                         </div>
 
                         {/* Income */}
-                        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all hover:-translate-y-1 shadow-2xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-500/10 rounded-bl-full" />
+                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-6 border border-white/40 hover:bg-white/80 transition-all hover:-translate-y-1 shadow-xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-500/5 rounded-bl-full" />
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-emerald-500/10 rounded-xl relative z-10">
-                                    <ArrowUpRight size={24} className="text-emerald-400" />
+                                <div className="p-3 bg-emerald-50 rounded-xl relative z-10 border border-emerald-100">
+                                    <ArrowUpRight size={24} className="text-emerald-600" />
                                 </div>
                             </div>
-                            <p className="text-indigo-200/50 font-black text-[10px] uppercase tracking-widest relative z-10">Total Income</p>
-                            <h3 className="text-2xl font-black text-white mt-1 relative z-10">
+                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest relative z-10">Total Income</p>
+                            <h3 className="text-2xl font-black text-slate-900 mt-1 relative z-10">
                                 ${stats.income.toLocaleString()}
                             </h3>
                         </div>
 
                         {/* Expense */}
-                        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all hover:-translate-y-1 shadow-2xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-rose-500/10 rounded-bl-full" />
+                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-6 border border-white/40 hover:bg-white/80 transition-all hover:-translate-y-1 shadow-xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-20 h-20 bg-rose-500/5 rounded-bl-full" />
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-rose-500/10 rounded-xl relative z-10">
-                                    <ArrowDownRight size={24} className="text-rose-400" />
+                                <div className="p-3 bg-rose-50 rounded-xl relative z-10 border border-rose-100">
+                                    <ArrowDownRight size={24} className="text-rose-600" />
                                 </div>
                             </div>
-                            <p className="text-indigo-200/50 font-black text-[10px] uppercase tracking-widest relative z-10">Total Spending</p>
-                            <h3 className="text-2xl font-black text-white mt-1 relative z-10">
+                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest relative z-10">Total Spending</p>
+                            <h3 className="text-2xl font-black text-slate-900 mt-1 relative z-10">
                                 ${stats.expense.toLocaleString()}
                             </h3>
                         </div>
 
                         {/* Credit */}
-                        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all hover:-translate-y-1 shadow-2xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/10 rounded-bl-full" />
+                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-6 border border-white/40 hover:bg-white/80 transition-all hover:-translate-y-1 shadow-xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/5 rounded-bl-full" />
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-amber-500/10 rounded-xl relative z-10">
-                                    <CreditCard size={24} className="text-amber-400" />
+                                <div className="p-3 bg-amber-50 rounded-xl relative z-10 border border-amber-100">
+                                    <CreditCard size={24} className="text-amber-600" />
                                 </div>
-                                <Activity size={16} className="text-indigo-400/30 relative z-10" />
+                                <Activity size={16} className="text-slate-300 relative z-10" />
                             </div>
-                            <p className="text-indigo-200/50 font-black text-[10px] uppercase tracking-widest relative z-10">Credit Usage</p>
-                            <h3 className="text-2xl font-black text-white mt-1 relative z-10">
+                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest relative z-10">Credit Usage</p>
+                            <h3 className="text-2xl font-black text-slate-900 mt-1 relative z-10">
                                 ${stats.credit.toLocaleString()}
                             </h3>
                         </div>
@@ -339,9 +339,9 @@ export default function Dashboard() {
                     {/* Charts Details */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Main Chart */}
-                        <div className="lg:col-span-2 bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl">
+                        <div className="lg:col-span-2 bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
                             <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-lg font-black text-white uppercase tracking-widest">Spending Priority</h3>
+                                <h3 className="text-lg font-black text-slate-900 uppercase tracking-widest">Spending Priority</h3>
                                 <div className="flex gap-2">
                                     {/* Legend could go here */}
                                 </div>
@@ -386,8 +386,8 @@ export default function Dashboard() {
                         </div>
 
                         {/* Side Chart */}
-                        <div className="lg:col-span-1 bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl">
-                            <h3 className="text-lg font-black text-white mb-8 uppercase tracking-widest">Distribution</h3>
+                        <div className="lg:col-span-1 bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
+                            <h3 className="text-lg font-black text-slate-900 mb-8 uppercase tracking-widest">Distribution</h3>
                             <div className="h-[300px] w-full relative">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
@@ -411,18 +411,18 @@ export default function Dashboard() {
                                 </ResponsiveContainer>
                                 {/* Center Stats */}
                                 <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
-                                    <p className="text-[10px] text-indigo-300/50 font-black uppercase tracking-widest">Total Flow</p>
-                                    <p className="text-xl font-black text-white tracking-tighter">${(stats.income + stats.expense).toLocaleString()}</p>
+                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Total Flow</p>
+                                    <p className="text-xl font-black text-slate-900 tracking-tighter">${(stats.income + stats.expense).toLocaleString()}</p>
                                 </div>
                             </div>
                             <div className="space-y-4 mt-8">
                                 {lifetimeDistData.map((item, i) => (
                                     <div key={i} className="flex items-center justify-between text-sm group">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]" style={{ backgroundColor: item.fill }} />
-                                            <span className="text-indigo-200/80 font-bold tracking-tight uppercase text-xs">{item.name}</span>
+                                            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.fill }} />
+                                            <span className="text-slate-500 font-bold tracking-tight uppercase text-xs">{item.name}</span>
                                         </div>
-                                        <span className="font-black text-white bg-white/5 px-3 py-1 rounded-lg border border-white/5 transition-all group-hover:bg-white/10 group-hover:border-white/20">
+                                        <span className="font-black text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 transition-all group-hover:bg-indigo-50 group-hover:border-indigo-100">
                                             ${item.amount.toLocaleString()}
                                         </span>
                                     </div>
@@ -438,23 +438,23 @@ export default function Dashboard() {
                     {/* Header with Selected Month */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <h2 className="text-4xl font-black text-white tracking-tight uppercase">
+                            <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase">
                                 {new Date(selectedMonth + '-01').toLocaleString('default', { month: 'long' })}
-                                <span className="text-white/20 ml-3">{selectedMonth.split('-')[0]}</span>
+                                <span className="text-slate-200 ml-3">{selectedMonth.split('-')[0]}</span>
                             </h2>
-                            <p className="text-sm font-bold text-indigo-300/60 mt-1 uppercase tracking-widest">Monthly Performance Breakdown</p>
+                            <p className="text-sm font-bold text-indigo-600/60 mt-1 uppercase tracking-widest">Monthly Performance Breakdown</p>
                         </div>
 
                         {/* Month Filter Selector */}
-                        <div className="flex items-center gap-4 bg-white/5 p-3 px-5 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-md">
-                            <label className="text-[10px] font-black text-indigo-300/50 uppercase tracking-[0.2em]">Select Period:</label>
+                        <div className="flex items-center gap-4 bg-white/70 p-3 px-5 rounded-2xl border border-white/40 shadow-xl backdrop-blur-md">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Select Period:</label>
                             <select
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="bg-transparent border-none text-sm font-black text-white outline-none cursor-pointer pr-8 hover:text-emerald-400 transition-colors"
+                                className="bg-transparent border-none text-sm font-black text-slate-900 outline-none cursor-pointer pr-8 hover:text-indigo-600 transition-colors"
                             >
                                 {availableMonths.map(m => (
-                                    <option key={m} value={m} className="bg-slate-900 text-white">
+                                    <option key={m} value={m} className="bg-white text-slate-900">
                                         {new Date(m + '-01').toLocaleString('default', { month: 'long', year: 'numeric' })}
                                     </option>
                                 ))}
@@ -463,25 +463,25 @@ export default function Dashboard() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-xl text-white relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-violet-500/10 rounded-bl-full" />
-                            <p className="text-indigo-200/50 text-xs font-bold uppercase tracking-widest mb-1">Total Net Worth</p>
+                        <Card className="p-6 bg-white/70 border-white/40 backdrop-blur-xl text-slate-900 relative overflow-hidden group shadow-xl">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-bl-full" />
+                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Net Worth</p>
                             <h3 className="text-2xl font-black italic tracking-tight">${netWorth.toLocaleString()}</h3>
-                            <div className="mt-4 flex items-center gap-2 text-[10px] text-emerald-400 font-bold bg-emerald-400/10 w-fit px-2 py-1 rounded-full">
+                            <div className="mt-4 flex items-center gap-2 text-[10px] text-indigo-600 font-bold bg-indigo-50 w-fit px-2 py-1 rounded-full border border-indigo-100">
                                 <Activity size={10} /> LIFETIME
                             </div>
                         </Card>
-                        <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-xl">
-                            <p className="text-indigo-200/50 text-xs font-bold uppercase tracking-widest mb-1">Monthly Income</p>
-                            <h3 className="text-2xl font-black text-white">${monthlyFiltered.income.toLocaleString()}</h3>
+                        <Card className="p-6 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
+                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Monthly Income</p>
+                            <h3 className="text-2xl font-black text-emerald-600">${monthlyFiltered.income.toLocaleString()}</h3>
                         </Card>
-                        <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-xl">
-                            <p className="text-indigo-200/50 text-xs font-bold uppercase tracking-widest mb-1">Monthly Spending</p>
-                            <h3 className="text-2xl font-black text-rose-400">${monthlyFiltered.expense.toLocaleString()}</h3>
+                        <Card className="p-6 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
+                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Monthly Spending</p>
+                            <h3 className="text-2xl font-black text-rose-600">${monthlyFiltered.expense.toLocaleString()}</h3>
                         </Card>
-                        <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-xl">
-                            <p className="text-indigo-200/50 text-xs font-bold uppercase tracking-widest mb-1">Credit Usage</p>
-                            <h3 className="text-2xl font-black text-amber-400">${monthlyFiltered.credit.toLocaleString()}</h3>
+                        <Card className="p-6 bg-white/70 border-white/40 backdrop-blur-xl shadow-xl">
+                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Credit Usage</p>
+                            <h3 className="text-2xl font-black text-amber-600">${monthlyFiltered.credit.toLocaleString()}</h3>
                         </Card>
                     </div>
 
@@ -529,8 +529,8 @@ export default function Dashboard() {
                         </div>
 
                         {/* Monthly Distribution Pie Chart */}
-                        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl">
-                            <h3 className="text-lg font-black text-white mb-8 uppercase tracking-widest">Monthly Split</h3>
+                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
+                            <h3 className="text-lg font-black text-slate-900 mb-8 uppercase tracking-widest">Monthly Split</h3>
                             <div className="h-[300px] relative">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
@@ -556,10 +556,10 @@ export default function Dashboard() {
                                 {monthlyDistData.map(item => (
                                     <div key={item.name} className="flex items-center justify-between text-sm group">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]" style={{ backgroundColor: item.fill }} />
-                                            <span className="text-sm font-bold text-indigo-200/60 uppercase tracking-tighter">{item.name}</span>
+                                            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.fill }} />
+                                            <span className="text-sm font-bold text-slate-500 uppercase tracking-tighter">{item.name}</span>
                                         </div>
-                                        <span className="text-sm font-black text-white bg-white/5 px-3 py-1 rounded-lg border border-white/5 group-hover:bg-white/10 transition-colors italic">${item.amount.toLocaleString()}</span>
+                                        <span className="text-sm font-black text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 group-hover:bg-indigo-50 transition-colors italic">${item.amount.toLocaleString()}</span>
                                     </div>
                                 ))}
                             </div>
@@ -573,22 +573,22 @@ export default function Dashboard() {
                     {/* Header with Selected Year */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <h2 className="text-4xl font-black text-white tracking-tight uppercase">
-                                Year <span className="text-white/20 ml-2">{selectedYear}</span>
+                            <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase">
+                                Year <span className="text-slate-200 ml-2">{selectedYear}</span>
                             </h2>
-                            <p className="text-sm font-bold text-indigo-300/60 mt-1 uppercase tracking-widest">Annual Financial Overview</p>
+                            <p className="text-sm font-bold text-indigo-600/60 mt-1 uppercase tracking-widest">Annual Financial Overview</p>
                         </div>
 
                         {/* Year Filter Selector */}
-                        <div className="flex items-center gap-4 bg-white/5 p-3 px-5 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-md">
-                            <label className="text-[10px] font-black text-indigo-300/50 uppercase tracking-[0.2em]">Select Year:</label>
+                        <div className="flex items-center gap-4 bg-white/70 p-3 px-5 rounded-2xl border border-white/40 shadow-xl backdrop-blur-md">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Select Year:</label>
                             <select
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(e.target.value)}
-                                className="bg-transparent border-none text-sm font-black text-white outline-none cursor-pointer pr-8 hover:text-emerald-600 transition-colors"
+                                className="bg-transparent border-none text-sm font-black text-slate-900 outline-none cursor-pointer pr-8 hover:text-indigo-600 transition-colors"
                             >
                                 {availableYears.map(y => (
-                                    <option key={y} value={y} className="bg-slate-900 text-white">{y}</option>
+                                    <option key={y} value={y} className="bg-white text-slate-900">{y}</option>
                                 ))}
                             </select>
                         </div>
@@ -596,8 +596,8 @@ export default function Dashboard() {
 
 
                     {/* Annual Performance Chart (Income vs Expense) */}
-                    <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl">
-                        <h3 className="text-lg font-black text-white mb-8 uppercase tracking-widest">Annual Flux</h3>
+                    <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
+                        <h3 className="text-lg font-black text-slate-900 mb-8 uppercase tracking-widest">Annual Flux</h3>
                         <div className="h-[350px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={yearlyFiltered.monthlyPerformance} barGap={8}>
@@ -617,16 +617,16 @@ export default function Dashboard() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Breakdown by Category */}
-                        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl">
+                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
                             <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-lg font-black text-white uppercase tracking-tight">Category Spend</h3>
-                                <div className="px-3 py-1 bg-white/10 text-indigo-300 text-[10px] font-black rounded-lg uppercase tracking-widest border border-white/5">Yearly Total</div>
+                                <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">Category Spend</h3>
+                                <div className="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-black rounded-lg uppercase tracking-widest border border-indigo-100">Yearly Total</div>
                             </div>
                             <div className="space-y-4">
                                 {sortedYearlyByCategory.map((item, i) => (
-                                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 transition-transform hover:translate-x-1 group">
-                                        <span className="font-bold text-indigo-200/80 group-hover:text-white transition-colors capitalize">{item.name}</span>
-                                        <span className="font-black text-white text-lg italic tracking-tighter">${item.amount.toLocaleString()}</span>
+                                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-100 transition-transform hover:translate-x-1 group hover:bg-white hover:shadow-sm">
+                                        <span className="font-bold text-slate-600 group-hover:text-slate-900 transition-colors capitalize">{item.name}</span>
+                                        <span className="font-black text-slate-900 text-lg italic tracking-tighter">${item.amount.toLocaleString()}</span>
                                     </div>
                                 ))}
                                 {sortedYearlyByCategory.length === 0 && (
@@ -636,8 +636,8 @@ export default function Dashboard() {
                         </div>
 
                         {/* Distribution Chart */}
-                        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl">
-                            <h3 className="text-lg font-black text-white mb-8 uppercase tracking-widest">Yearly Split</h3>
+                        <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
+                            <h3 className="text-lg font-black text-slate-900 mb-8 uppercase tracking-widest">Yearly Split</h3>
                             <div className="h-[250px]">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
@@ -662,8 +662,8 @@ export default function Dashboard() {
                             <div className="space-y-4 mt-8">
                                 {yearlyDistData.map(item => (
                                     <div key={item.name} className="flex items-center justify-between text-sm group">
-                                        <span className="text-indigo-200/50 font-black uppercase tracking-widest text-[10px]">{item.name}</span>
-                                        <span className="font-black text-white bg-white/5 px-3 py-1 rounded-lg border border-white/5 transition-all group-hover:bg-white/10 italic tracking-tighter">${item.amount.toLocaleString()}</span>
+                                        <span className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">{item.name}</span>
+                                        <span className="font-black text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 transition-all group-hover:bg-indigo-50 italic tracking-tighter">${item.amount.toLocaleString()}</span>
                                     </div>
                                 ))}
                             </div>
@@ -671,11 +671,11 @@ export default function Dashboard() {
                     </div>
 
                     {/* Savings Chart */}
-                    <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl">
+                    <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
                         <div className="flex items-center justify-between mb-8">
                             <div>
-                                <h3 className="text-lg font-black text-white uppercase tracking-widest">Savings Velocity</h3>
-                                <p className="text-[10px] text-indigo-300/40 mt-1 uppercase font-bold tracking-[0.2em]">Net Monthly Growth Rate</p>
+                                <h3 className="text-lg font-black text-slate-900 uppercase tracking-widest">Savings Velocity</h3>
+                                <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-[0.2em]">Net Monthly Growth Rate</p>
                             </div>
                         </div>
                         <div className="h-[300px]">
@@ -704,17 +704,17 @@ export default function Dashboard() {
 
             {activeTab === 'summary' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="p-8 bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl">
-                        <h3 className="text-xl font-black text-white mb-8 uppercase tracking-widest italic">Financial Health</h3>
+                    <Card className="p-8 bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl">
+                        <h3 className="text-xl font-black text-slate-900 mb-8 uppercase tracking-widest italic">Financial Health</h3>
                         <div className="space-y-6">
                             <div className="flex justify-between items-center group">
-                                <span className="text-indigo-200/60 font-medium uppercase tracking-widest text-xs">Savings Rate</span>
+                                <span className="text-slate-500 font-medium uppercase tracking-widest text-xs">Savings Rate</span>
                                 <span className="font-black text-2xl text-emerald-400 font-mono italic">
                                     {stats.income > 0 ? (((stats.income - stats.expense) / stats.income) * 100).toFixed(1) : 0}%
                                 </span>
                             </div>
                             <div className="flex justify-between items-center group">
-                                <span className="text-indigo-200/60 font-medium uppercase tracking-widest text-xs">Debt To Income</span>
+                                <span className="text-slate-500 font-medium uppercase tracking-widest text-xs">Debt To Income</span>
                                 <span className="font-black text-2xl text-amber-400 font-mono italic">
                                     {stats.income > 0 ? ((stats.credit / stats.income) * 100).toFixed(1) : 0}%
                                 </span>

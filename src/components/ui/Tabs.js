@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 export function Tabs({ tabs, activeTab, onChange, className }) {
     return (
         <div className={twMerge(
-            "flex p-1.5 gap-2 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl overflow-x-auto no-scrollbar",
+            "flex p-1.5 gap-2 rounded-2xl bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl overflow-x-auto no-scrollbar",
             className
         )}>
             {tabs.map((tab) => (
@@ -14,8 +14,8 @@ export function Tabs({ tabs, activeTab, onChange, className }) {
                     className={twMerge(
                         "whitespace-nowrap px-6 py-2.5 text-sm font-bold uppercase tracking-wider transition-all duration-300 rounded-xl outline-none",
                         activeTab === tab.id
-                            ? "bg-white/10 text-white shadow-[0_0_20px_rgba(255,255,255,0.1)] border border-white/20"
-                            : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 border border-indigo-500"
+                            : "text-slate-500 hover:text-indigo-600 hover:bg-indigo-50"
                     )}
                 >
                     {tab.label}
