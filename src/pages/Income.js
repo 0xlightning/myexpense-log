@@ -258,7 +258,7 @@ export default function Income() {
                                             <tr key={item.id} className="hover:bg-indigo-50/30 transition-colors group">
                                                 <td className="px-6 py-4 text-slate-900 font-bold">{format(new Date(item.date), 'MMM dd, yyyy')}</td>
                                                 <td className="px-6 py-4">
-                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-emerald-50 text-emerald-600 border border-emerald-100">
                                                         {sources.find(s => s.id === item.sourceId)?.name || 'Unknown'}
                                                     </span>
                                                 </td>

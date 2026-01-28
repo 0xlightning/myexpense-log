@@ -50,7 +50,7 @@ export default function Login() {
                 </div>
 
                 {error && (
-                    <div className="bg-rose-50 border border-rose-100 text-rose-600 p-4 rounded-2xl mb-6 text-xs font-black uppercase tracking-widest flex items-center gap-3 shadow-sm">
+                    <div className="bg-rose-50 border border-rose-100 text-rose-600 p-4 rounded-2xl mb-6 text-xs font-bold uppercase tracking-widest flex items-center gap-3 shadow-sm">
                         <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
                         {error}
                     </div>
