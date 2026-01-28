@@ -4,7 +4,7 @@ import { subscribeToCollection, collections } from '../services/firestore';
 import { Card } from '../components/ui/Card';
 import { Tabs } from '../components/ui/Tabs';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, AreaChart, Area } from 'recharts';
-import { Wallet, ArrowUpRight, ArrowDownRight, CreditCard, Activity, TrendingUp } from 'lucide-react';
+import { Wallet, ArrowUpRight, ArrowDownRight, CreditCard, Activity, TrendingUp, TrendingDown, Banknote } from 'lucide-react';
 
 const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
 
