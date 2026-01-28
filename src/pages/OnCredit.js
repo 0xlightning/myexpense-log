@@ -5,14 +5,16 @@ import { addCreditTransaction, deleteTransaction } from '../services/transaction
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
+import { Modal } from '../components/ui/Modal';
 import { format } from 'date-fns';
-import { ArrowUpRight, Calendar, DollarSign, CreditCard, Trash2, Edit3, AlertCircle } from 'lucide-react';
+import { ArrowUpRight, Calendar, DollarSign, CreditCard, Trash2, Edit3, AlertCircle, Plus, ClipboardList } from 'lucide-react';
 
 export default function OnCredit() {
     const { currentUser } = useAuth();
     const [debts, setDebts] = useState([]);
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // --- Form State ---
     const [editingDebt, setEditingDebt] = useState(null);
@@ -48,6 +50,7 @@ export default function OnCredit() {
                 });
             }
             setAmount(''); setCardId(''); setNotes(''); setDate(format(new Date(), 'yyyy-MM-dd'));
+            setIsModalOpen(false);
         } catch (error) { console.error(error); alert("Failed: " + error.message); }
         finally { setLoading(false); }
     };
@@ -58,19 +61,24 @@ export default function OnCredit() {
         setDate(debt.date);
         setCardId(debt.cardId);
         setNotes(debt.notes || '');
+        setIsModalOpen(true);
     };
 
     const handleDelete = async (debt) => {
         if (window.confirm('Void this debt record?')) {
             try {
-                // Reversing credit usage (which decreases balance) means ADDING to balance => 'expense' reversal logic?
-                // Actually in transactions.js:
-                // Credit Usage -> newBalance = oldBalance - amount.
-                // Reversal -> newBalance = oldBalance + amount.
-                // Expense reversal logic adds amount back. So 'expense' type works.
                 await deleteTransaction(currentUser.uid, collections.on_credit, debt.id, debt.cardId, debt.amount, 'expense');
             } catch (error) { console.error(error); alert("Failed to delete debt"); }
         }
+    };
+
+    const handleAddNew = () => {
+        setEditingDebt(null);
+        setAmount('');
+        setCardId('');
+        setNotes('');
+        setDate(format(new Date(), 'yyyy-MM-dd'));
+        setIsModalOpen(true);
     };
 
     return (
@@ -85,151 +93,169 @@ export default function OnCredit() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Form Section */}
-                <div className="lg:col-span-1">
-                    <Card className="p-8 bg-white border border-slate-200 shadow-sm sticky top-8">
-                        <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2 uppercase">
-                            {editingDebt ? 'Edit Record' : 'Log New Debt'}
-                        </h2>
+            {/* Debts Table - Full Width */}
+            <Card className="p-8 bg-white border border-slate-200 shadow-sm">
+                <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-widest">
+                    <ClipboardList size={22} className="text-slate-400" /> Credit Logs
+                </h2>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Credit Card</label>
-                                <div className="relative">
-                                    <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                                    <select
-                                        required
-                                        value={cardId}
-                                        onChange={(e) => setCardId(e.target.value)}
-                                        disabled={editingDebt}
-                                        className="w-full rounded-lg border border-slate-200 bg-white pl-11 pr-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all disabled:bg-slate-50 disabled:opacity-50 appearance-none text-sm"
-                                    >
-                                        <option value="" className="bg-white text-slate-400">Select Card...</option>
-                                        {cards.map(c => (
-                                            <option key={c.id} value={c.id} className="bg-white text-slate-900">
-                                                {c.name} (Limit: ${c.creditLimit})
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                {cards.length === 0 && (
-                                    <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 p-3 rounded-lg mt-2 border border-amber-100 leading-relaxed font-bold">
-                                        <AlertCircle size={14} className="shrink-0" />
-                                        <span>No active credit cards found. Please add a method first.</span>
-                                    </div>
-                                )}
-                            </div>
+                <div className="overflow-hidden rounded-xl border border-slate-200">
+                    <table className="w-full text-left text-sm">
+                        <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 text-[10px]">
+                            <tr>
+                                <th className="px-6 py-4 font-bold uppercase tracking-widest">Date</th>
+                                <th className="px-6 py-4 font-bold uppercase tracking-widest">Card Used</th>
+                                <th className="px-6 py-4 font-bold uppercase tracking-widest">Note</th>
+                                <th className="px-6 py-4 font-bold uppercase tracking-widest text-right">Amount</th>
+                                <th className="px-6 py-4 font-bold uppercase tracking-widest text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-transparent">
+                            {debts.map((debt) => (
+                                <tr key={debt.id} className="hover:bg-amber-50/30 transition-colors group">
+                                    <td className="px-6 py-4 text-slate-900 font-bold">{format(new Date(debt.date), 'MMM dd, yyyy')}</td>
+                                    <td className="px-6 py-4">
+                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold uppercase bg-amber-50 text-amber-700 border border-amber-100">
+                                            <CreditCard size={12} />
+                                            {cards.find(c => c.id === debt.cardId)?.name || 'Unknown'}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 text-slate-500 font-medium">
+                                        {debt.notes || '-'}
+                                    </td>
+                                    <td className="px-6 py-4 text-right font-bold text-amber-600">
+                                        ${debt.amount.toLocaleString()}
+                                    </td>
+                                    <td className="px-6 py-4 text-right">
+                                        <div className="flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button onClick={() => handleEdit(debt)} className="p-2 text-slate-400 hover:text-indigo-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Edit3 size={14} /></button>
+                                            <button onClick={() => handleDelete(debt)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Trash2 size={14} /></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                            {debts.length === 0 && (
+                                <tr>
+                                    <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
+                                        <div className="flex flex-col items-center justify-center">
+                                            <AlertCircle size={32} className="text-slate-300 mb-3" />
+                                            <p className="font-medium">No credit records found.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </Card>
 
-                            <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Amount</label>
-                                <div className="relative">
-                                    <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-600" size={18} />
-                                    <Input
-                                        type="number"
-                                        required
-                                        step="0.01"
-                                        value={amount}
-                                        onChange={(e) => setAmount(e.target.value)}
-                                        disabled={editingDebt}
-                                        placeholder="0.00"
-                                        className="pl-11 bg-white border-slate-200 font-bold text-lg text-slate-900 focus:ring-[#0067ff]/10"
-                                    />
-                                </div>
-                            </div>
+            {/* Floating Action Button */}
+            <button
+                onClick={handleAddNew}
+                className="fixed bottom-8 right-8 w-16 h-16 bg-amber-600 hover:bg-amber-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-40"
+                title="Log Credit"
+            >
+                <Plus size={28} />
+            </button>
 
-                            <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Date</label>
-                                <div className="relative">
-                                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                                    <Input
-                                        type="date"
-                                        required
-                                        value={date}
-                                        onChange={(e) => setDate(e.target.value)}
-                                        className="pl-11 bg-white border-slate-200 text-slate-900 focus:border-[#0067ff]/50"
-                                    />
-                                </div>
-                            </div>
+            {/* OnCredit Form Modal */}
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setEditingDebt(null);
+                    setAmount('');
+                    setCardId('');
+                    setNotes('');
+                }}
+                title={editingDebt ? 'Edit Record' : 'Log New Debt'}
+                size="md"
+            >
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Credit Card</label>
+                        <div className="relative">
+                            <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                            <select
+                                required
+                                value={cardId}
+                                onChange={(e) => setCardId(e.target.value)}
+                                disabled={editingDebt}
+                                className="w-full rounded-lg border border-slate-200 bg-white pl-11 pr-4 py-3 text-slate-900 focus:border-amber-500/50 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all disabled:bg-slate-50 disabled:opacity-50 appearance-none text-sm"
+                            >
+                                <option value="" className="bg-white text-slate-400">Select Card...</option>
+                                {cards.map(c => (
+                                    <option key={c.id} value={c.id} className="bg-white text-slate-900">
+                                        {c.name} (Limit: ${c.creditLimit?.toLocaleString()})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
 
-                            <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Notes / Item</label>
+                    <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Amount</label>
+                        <div className="relative">
+                            <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-600" size={18} />
+                            <Input
+                                type="number"
+                                required
+                                step="0.01"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
+                                disabled={editingDebt}
+                                className="pl-11 bg-white border-slate-200 font-bold text-lg text-slate-900 focus:ring-amber-500/10"
+                                placeholder="0.00"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Date</label>
+                            <div className="relative">
+                                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                                 <Input
-                                    value={notes}
-                                    onChange={(e) => setNotes(e.target.value)}
-                                    placeholder="What did you buy?"
-                                    className="bg-white border-slate-200 text-slate-900 text-sm"
+                                    type="date"
+                                    required
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                    className="pl-11 bg-white border-slate-200 text-slate-900 focus:border-amber-500/50"
                                 />
                             </div>
-
-                            <div className="flex gap-3 pt-2">
-                                <Button type="submit" disabled={loading || cards.length === 0} className="flex-1 bg-[#0067ff] hover:bg-[#0056d6] shadow-sm transition-all h-12 text-base text-white font-bold rounded-lg uppercase">
-                                    {loading ? 'Saving...' : (editingDebt ? 'Update Record' : 'Confirm Debt')}
-                                </Button>
-                                {editingDebt && (
-                                    <Button type="button" variant="secondary" onClick={() => {
-                                        setEditingDebt(null);
-                                        setAmount('');
-                                        setCardId('');
-                                        setNotes('');
-                                    }} className="px-6 rounded-lg bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">
-                                        Cancel
-                                    </Button>
-                                )}
-                            </div>
-                        </form>
-                    </Card>
-                </div>
-
-                {/* List Section */}
-                <div className="lg:col-span-2">
-                    <Card className="p-8 bg-white border border-slate-200 shadow-sm h-full">
-                        <h2 className="text-lg font-bold text-slate-900 mb-6 uppercase tracking-widest">Recent Unpaid Records</h2>
-                        <div className="overflow-hidden rounded-xl border border-slate-200">
-                            <table className="w-full text-left text-sm">
-                                <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 text-[10px]">
-                                    <tr>
-                                        <th className="px-6 py-4 font-bold uppercase tracking-widest">Date</th>
-                                        <th className="px-6 py-4 font-bold uppercase tracking-widest">Description</th>
-                                        <th className="px-6 py-4 font-bold uppercase tracking-widest">Card</th>
-                                        <th className="px-6 py-4 font-bold uppercase tracking-widest text-right">Amount</th>
-                                        <th className="px-6 py-4 font-bold uppercase tracking-widest text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100 bg-transparent">
-                                    {debts.map((item) => (
-                                        <tr key={item.id} className="hover:bg-indigo-50/30 transition-colors group">
-                                            <td className="px-6 py-4 text-slate-900 font-bold">{format(new Date(item.date), 'MMM dd, yyyy')}</td>
-                                            <td className="px-6 py-4 text-slate-500 font-medium">{item.notes || '-'}</td>
-                                            <td className="px-6 py-4">
-                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-indigo-50 text-indigo-600 border border-indigo-100">
-                                                    {cards.find(c => c.id === item.cardId)?.name || 'Unknown'}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 text-right font-bold text-amber-600">
-                                                ${item.amount.toLocaleString()}
-                                            </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <div className="flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button onClick={() => handleEdit(item)} className="p-2 text-slate-400 hover:text-indigo-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Edit3 size={14} /></button>
-                                                    <button onClick={() => handleDelete(item)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Trash2 size={14} /></button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {debts.length === 0 && (
-                                        <tr>
-                                            <td colSpan={5} className="px-6 py-12 text-center text-slate-300 uppercase tracking-[0.2em] font-bold text-xs">
-                                                No debt records found.
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
                         </div>
-                    </Card>
-                </div>
-            </div>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Notes</label>
+                            <Input
+                                type="text"
+                                value={notes}
+                                onChange={(e) => setNotes(e.target.value)}
+                                placeholder="Description"
+                                className="bg-white border-slate-200 text-slate-900 focus:border-amber-500/50"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex gap-3 mt-6 pt-4 border-t border-slate-100">
+                        <Button type="submit" disabled={loading} className="flex-1 bg-amber-600 hover:bg-amber-700 shadow-sm transition-all h-12 text-base font-bold uppercase text-white">
+                            {loading ? 'Processing...' : (editingDebt ? 'Update Record' : 'Log Debt')}
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => {
+                                setIsModalOpen(false);
+                                setEditingDebt(null);
+                                setAmount('');
+                                setCardId('');
+                                setNotes('');
+                            }}
+                            className="px-6 rounded-xl bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 transition-all"
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </form>
+            </Modal>
         </div>
     );
 }
