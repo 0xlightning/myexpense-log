@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { updateItem, subscribeToCollection, collections } from '../services/firestore';
 import { createCard } from '../services/transactions';
 import { Button } from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { CreditCard, Landmark, Banknote, ShieldCheck, Archive, Edit2, Plus } from 'lucide-react';
 
@@ -87,7 +88,7 @@ export default function CardPage() {
             case 'credit': return <CreditCard className="text-purple-500" size={24} />;
             case 'cash': return <Banknote className="text-green-500" size={24} />;
             case 'debit': return <CreditCard className="text-blue-500" size={24} />;
-            default: return <Landmark className="text-slate-500" size={24} />;
+            default: return <Landmark className="text-indigo-400" size={24} />;
         }
     };
 
@@ -104,8 +105,11 @@ export default function CardPage() {
         <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Payment Methods</h1>
-                    <p className="text-slate-500 mt-1">Manage your accounts, cards, and wallets.</p>
+                    <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                        <Landmark className="text-indigo-400" size={32} />
+                        Payment Methods
+                    </h1>
+                    <p className="text-indigo-300/80 mt-1 font-medium italic">Manage your accounts, cards, and wallets with precision.</p>
                 </div>
                 <Button
                     onClick={() => {
@@ -117,7 +121,7 @@ export default function CardPage() {
                             setCreditLimit('');
                         }
                     }}
-                    className="hidden md:flex gap-2"
+                    className="hidden md:flex gap-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-6 px-8 shadow-indigo-600/20 shadow-lg"
                     variant={showForm ? "secondary" : "default"}
                 >
                     {showForm ? 'Cancel' : <><Plus size={18} /> Add Method</>}
@@ -128,78 +132,78 @@ export default function CardPage() {
                 {/* Form Section */}
                 {showForm && (
                     <div className="lg:col-span-1">
-                        <div className="bg-white rounded-2xl p-6 shadow-xl shadow-slate-200/50 border border-slate-100 sticky top-8">
-                            <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                                {editingCard ? <Edit2 size={20} className="text-violet-500" /> : <ShieldCheck size={20} className="text-violet-500" />}
-                                {editingCard ? 'Edit Method' : 'Add New Method'}
+                        <Card className="p-8 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl sticky top-8">
+                            <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                {editingCard ? <Edit2 size={20} className="text-indigo-400" /> : <ShieldCheck size={20} className="text-indigo-400" />}
+                                {editingCard ? 'Edit Method' : 'New Method'}
                             </h2>
-                            <form onSubmit={handleSubmit} className="space-y-5">
-                                <div>
-                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">Account Name</label>
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Account Name</label>
                                     <Input
                                         required
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="e.g. Chase Sapphire"
-                                        className="bg-slate-50 border-slate-200 focus:bg-white transition-all"
+                                        className="bg-white/5 border-white/10 text-white focus:bg-white/10 transition-all"
                                     />
                                 </div>
 
-                                <div>
-                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">Type</label>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Type</label>
                                     <select
-                                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 focus:bg-white transition-all outline-none"
+                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:bg-white/10 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all appearance-none"
                                         value={type}
                                         onChange={(e) => setType(e.target.value)}
                                     >
-                                        <option value="bank">Bank Account</option>
-                                        <option value="debit">Debit Card</option>
-                                        <option value="credit">Credit Card</option>
-                                        <option value="cash">Cash / Wallet</option>
+                                        <option value="bank" className="bg-slate-900">Bank Account</option>
+                                        <option value="debit" className="bg-slate-900">Debit Card</option>
+                                        <option value="credit" className="bg-slate-900">Credit Card</option>
+                                        <option value="cash" className="bg-slate-900">Cash / Wallet</option>
                                     </select>
                                 </div>
 
                                 {/* Initial Balance - Only for create mode */}
                                 {!editingCard && (
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">
                                             Initial Balance
                                         </label>
                                         <div className="relative">
-                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                                            <Banknote className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" size={18} />
                                             <Input
                                                 type="number"
                                                 step="0.01"
                                                 value={initialBalance}
                                                 onChange={(e) => setInitialBalance(e.target.value)}
                                                 placeholder="0.00"
-                                                className="pl-8 bg-slate-50 border-slate-200 focus:bg-white"
+                                                className="pl-11 bg-white/10 border-white/20 text-indigo-400 font-bold"
                                             />
                                         </div>
-                                        <p className="text-xs text-slate-400 mt-1.5 ml-1">Current amount in account</p>
+                                        <p className="text-xs text-indigo-300/50 mt-1.5 ml-1 uppercase tracking-tighter">Current amount in account</p>
                                     </div>
                                 )}
 
                                 {/* Credit Limit - Only for credit cards */}
                                 {type === 'credit' && (
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">Credit Limit</label>
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Credit Limit</label>
                                         <div className="relative">
-                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                                            <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" size={18} />
                                             <Input
                                                 type="number"
                                                 step="0.01"
                                                 value={creditLimit}
                                                 onChange={(e) => setCreditLimit(e.target.value)}
                                                 placeholder="e.g. 5000"
-                                                className="pl-8 bg-slate-50 border-slate-200 focus:bg-white"
+                                                className="pl-11 bg-white/10 border-white/20 text-purple-400 font-bold"
                                             />
                                         </div>
                                     </div>
                                 )}
 
                                 <div className="flex gap-3 pt-2">
-                                    <Button type="submit" disabled={loading} className="flex-1 bg-gradient-to-r from-violet-600 to-indigo-600 hover:shadow-lg hover:shadow-violet-500/30 transition-all">
+                                    <Button type="submit" disabled={loading} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-12 rounded-xl shadow-lg shadow-indigo-600/20 transition-all hover:-translate-y-0.5 active:scale-[0.98]">
                                         {loading ? 'Saving...' : (editingCard ? 'Update Method' : 'Create Method')}
                                     </Button>
                                     {editingCard && (
@@ -209,75 +213,82 @@ export default function CardPage() {
                                             setType('bank');
                                             setCreditLimit('');
                                             setShowForm(false);
-                                        }} className="px-5">
+                                        }} className="px-5 rounded-xl bg-white/5 text-indigo-300 border-white/10 hover:bg-white/10">
                                             Cancel
                                         </Button>
                                     )}
                                 </div>
                             </form>
-                        </div>
+                        </Card>
                     </div>
                 )}
 
                 {/* List Section */}
-                <div className={`${showForm ? 'lg:col-span-2' : 'lg:col-span-3'} grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${showForm ? '2' : '3'} gap-5 auto-rows-min`}>
+                <div className={`${showForm ? 'lg:col-span-2' : 'lg:col-span-3'} grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${showForm ? '2' : '3'} gap-6 auto-rows-min`}>
                     {cards.map(card => (
-                        <div key={card.id} className="group relative bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-slate-200/50 hover:border-violet-100 hover:-translate-y-1 transition-all duration-300">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className={`p-3.5 rounded-2xl shadow-inner ${card.type === 'credit' ? 'bg-purple-50' : card.type === 'cash' ? 'bg-emerald-50' : 'bg-slate-50'}`}>
-                                    {getTypeIcon(card.type)}
-                                </div>
-                                <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ring-1 ${getTypeColor(card.type)}`}>
-                                    {card.type}
-                                </div>
-                            </div>
+                        <div key={card.id} className="group relative bg-white/5 backdrop-blur-xl rounded-[2rem] p-8 border border-white/10 hover:bg-white/10 hover:border-indigo-500/30 hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+                            {/* Decorative gradient overlay */}
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-3xl group-hover:bg-indigo-500/20 transition-all rounded-full -translate-y-1/2 translate-x-1/2" />
 
-                            <h3 className="text-lg font-bold text-slate-900 group-hover:text-violet-700 transition-colors mb-1">{card.name}</h3>
-
-                            <div className="flex items-baseline gap-1 mb-4">
-                                <span className="text-sm text-slate-400 font-medium">$</span>
-                                <span className="text-3xl font-extrabold text-slate-900 tracking-tight">
-                                    {(card.balance || 0).toLocaleString()}
-                                </span>
-                            </div>
-
-                            {card.type === 'credit' && (
-                                <div className="space-y-2 mb-6">
-                                    <div className="flex justify-between text-xs font-semibold text-slate-500">
-                                        <span>Limit Used</span>
-                                        <span>{Math.abs(((card.balance || 0) / (card.creditLimit || 1)) * 100).toFixed(0)}%</span>
+                            <div className="relative z-10">
+                                <div className="flex justify-between items-start mb-10">
+                                    <div className={`p-4 rounded-2xl ${card.type === 'credit' ? 'bg-purple-500/10 text-purple-400' : card.type === 'cash' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-indigo-500/10 text-indigo-400'} border border-white/5`}>
+                                        {getTypeIcon(card.type)}
                                     </div>
-                                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                                        <div
-                                            className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"
-                                            style={{ width: `${Math.min(Math.abs(((card.balance || 0) / (card.creditLimit || 1)) * 100), 100)}%` }}
-                                        />
-                                    </div>
-                                    <div className="flex justify-between text-xs text-slate-400">
-                                        <span>Aval: ${((card.creditLimit || 0) + (card.balance || 0)).toLocaleString()}</span>
-                                        <span>Limit: ${card.creditLimit?.toLocaleString()}</span>
+                                    <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${card.type === 'credit' ? 'border-purple-500/20 bg-purple-500/5 text-purple-400' : card.type === 'cash' ? 'border-emerald-500/20 bg-emerald-500/5 text-emerald-400' : 'border-indigo-500/20 bg-indigo-500/5 text-indigo-400'}`}>
+                                        {card.type}
                                     </div>
                                 </div>
-                            )}
 
-                            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                                <button onClick={() => handleEdit(card)} className="p-2 bg-white text-slate-600 hover:text-violet-600 rounded-lg shadow-sm border border-slate-200 hover:border-violet-200 transition-colors">
-                                    <Edit2 size={16} />
-                                </button>
-                                <button onClick={() => handleArchive(card)} className="p-2 bg-white text-slate-600 hover:text-red-600 rounded-lg shadow-sm border border-slate-200 hover:border-red-200 transition-colors">
-                                    <Archive size={16} />
-                                </button>
+                                <h3 className="text-xl font-bold text-white mb-2 tracking-tight group-hover:text-indigo-400 transition-colors uppercase">{card.name}</h3>
+
+                                <div className="flex items-baseline gap-1 mb-8">
+                                    <span className="text-2xl font-black text-white">$</span>
+                                    <span className="text-4xl font-black text-white tracking-tighter">
+                                        {(card.balance || 0).toLocaleString()}
+                                    </span>
+                                </div>
+
+                                {card.type === 'credit' && (
+                                    <div className="space-y-3 mb-4 bg-black/20 p-4 rounded-2xl border border-white/5">
+                                        <div className="flex justify-between text-[10px] font-black text-indigo-300/50 uppercase tracking-widest">
+                                            <span>Limit Utilized</span>
+                                            <span className={Math.abs(((card.balance || 0) / (card.creditLimit || 1)) * 100) > 80 ? 'text-rose-400' : 'text-indigo-400'}>
+                                                {Math.abs(((card.balance || 0) / (card.creditLimit || 1)) * 100).toFixed(0)}%
+                                            </span>
+                                        </div>
+                                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                            <div
+                                                className={`h-full rounded-full transition-all duration-1000 ${Math.abs(((card.balance || 0) / (card.creditLimit || 1)) * 100) > 80 ? 'bg-rose-500' : 'bg-gradient-to-r from-indigo-500 to-purple-500'}`}
+                                                style={{ width: `${Math.min(Math.abs(((card.balance || 0) / (card.creditLimit || 1)) * 100), 100)}%` }}
+                                            />
+                                        </div>
+                                        <div className="flex justify-between text-[10px] text-indigo-300/30 font-bold uppercase tracking-widest">
+                                            <span>Avail: ${((card.creditLimit || 0) + (card.balance || 0)).toLocaleString()}</span>
+                                            <span>Limit: ${card.creditLimit?.toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="pt-4 flex gap-3 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                                    <Button onClick={() => handleEdit(card)} className="flex-1 bg-white/5 hover:bg-white/10 text-white border-white/10 rounded-xl py-2 text-xs font-bold uppercase tracking-widest">
+                                        <Edit2 size={14} className="mr-2" /> Edit
+                                    </Button>
+                                    <Button onClick={() => handleArchive(card)} variant="secondary" className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl py-2 px-4 shadow-none">
+                                        <Archive size={14} />
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     ))}
 
                     {/* Add New Placeholder */}
                     {!showForm && (
-                        <button onClick={() => setShowForm(true)} className="flex flex-col items-center justify-center p-6 rounded-2xl border-2 border-dashed border-slate-200 hover:border-violet-300 hover:bg-violet-50/50 transition-all group h-full min-h-[240px]">
-                            <div className="p-4 rounded-full bg-slate-50 group-hover:bg-violet-100 transition-colors mb-3">
-                                <Plus size={24} className="text-slate-400 group-hover:text-violet-600" />
+                        <button onClick={() => setShowForm(true)} className="flex flex-col items-center justify-center p-8 rounded-[2rem] border-2 border-dashed border-white/10 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all group h-full min-h-[280px]">
+                            <div className="p-5 rounded-3xl bg-white/5 group-hover:bg-indigo-600 group-hover:shadow-lg group-hover:shadow-indigo-600/30 transition-all mb-4">
+                                <Plus size={32} className="text-indigo-400 group-hover:text-white" />
                             </div>
-                            <p className="font-semibold text-slate-500 group-hover:text-violet-700">Add New Method</p>
+                            <p className="font-black text-indigo-400 group-hover:text-indigo-400 uppercase tracking-widest text-xs">Add Method</p>
                         </button>
                     )}
                 </div>

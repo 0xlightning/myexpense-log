@@ -27,7 +27,8 @@ export const collections = {
     cards: 'cards',
     on_credit: 'on_credit',
     transfers: 'transfers',
-    transactions: 'transactions'
+    transactions: 'transactions',
+    investments: 'investments'
 };
 
 export const addItem = async (userId, collectionName, data) => {

@@ -9,7 +9,8 @@ import {
     LogOut,
     Menu,
     X,
-    ArrowRightLeft
+    ArrowRightLeft,
+    Briefcase
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../services/firebase';
@@ -37,6 +38,7 @@ export function Sidebar() {
         { name: 'Exchange', icon: ArrowRightLeft, path: '/exchange' },
         { name: 'Expenditure', icon: TrendingDown, path: '/expenditure' },
         { name: 'On Credit', icon: ArrowUpRight, path: '/on-credit' },
+        { name: 'Investments', icon: Briefcase, path: '/investments' },
     ];
 
     return (
@@ -59,14 +61,14 @@ export function Sidebar() {
 
             {/* Sidebar */}
             <div className={twMerge(
-                "fixed top-0 left-0 h-full w-72 bg-slate-900/95 backdrop-blur-xl text-slate-300 flex flex-col transition-transform duration-300 z-40 border-r border-white/5 shadow-2xl",
+                "fixed top-0 left-0 h-full w-72 bg-slate-900/80 backdrop-blur-md text-slate-300 flex flex-col transition-transform duration-300 z-40 border-r border-white/10 shadow-2xl",
                 isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
             )}>
                 <div className="p-8">
                     <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 tracking-wider">
                         EXPENSIVE
                     </h1>
-                    <p className="text-xs text-slate-500 mt-2 font-medium tracking-wide">PREMIUM TRACKER</p>
+                    <p className="text-xs text-indigo-300/80 mt-2 font-black tracking-[0.2em] uppercase">PREMIUM TRACKER</p>
                 </div>
 
                 <nav className="flex-1 px-4 space-y-2 overflow-y-auto py-4">
@@ -98,7 +100,7 @@ export function Sidebar() {
                                         size={22}
                                         className={clsx(
                                             "relative z-10 transition-colors duration-300",
-                                            isActive ? "text-white" : "text-slate-400 group-hover:text-white"
+                                            isActive ? "text-white" : "text-indigo-200/50 group-hover:text-white"
                                         )}
                                     />
                                     <span className="relative z-10 font-medium tracking-wide">{item.name}</span>
@@ -120,7 +122,7 @@ export function Sidebar() {
                         </div>
                         <div className="flex-1 overflow-hidden">
                             <p className="text-sm font-semibold text-white truncate">{currentUser?.email}</p>
-                            <p className="text-xs text-slate-500">Free Plan</p>
+                            <p className="text-xs text-violet-300 font-bold uppercase tracking-tighter">Pro Plan</p>
                         </div>
                     </div>
                     <button

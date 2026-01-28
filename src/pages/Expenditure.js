@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { addItem, updateItem, deleteItem, subscribeToCollection, collections } from '../services/firestore';
 import { addExpenseTransaction, deleteTransaction } from '../services/transactions';
 import { Button } from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Tabs } from '../components/ui/Tabs';
 import { format } from 'date-fns';
@@ -103,11 +104,11 @@ export default function Expenditure() {
         <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
-                        <TrendingDown className="text-rose-500" size={32} />
+                    <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                        <TrendingDown className="text-rose-400" size={32} />
                         Expenditure
                     </h1>
-                    <p className="text-slate-500 mt-1">Track where your money is going.</p>
+                    <p className="text-rose-300/80 mt-1 font-medium italic">Track where your money is going and stay in control.</p>
                 </div>
                 <Tabs
                     tabs={[{ id: 'expense', label: 'History & Entry' }, { id: 'manage', label: 'Categories' }]}
@@ -119,42 +120,42 @@ export default function Expenditure() {
 
             {activeTab === 'manage' && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className="md:col-span-1">
-                        <div className="bg-white rounded-2xl p-6 shadow-xl shadow-slate-200/50 border border-slate-100 sticky top-8">
-                            <h2 className="text-lg font-bold text-slate-900 mb-6">Manage Categories</h2>
+                    <div className="md:col-span-2">
+                        <Card className="p-6 sticky top-8 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
+                            <h2 className="text-lg font-bold text-white mb-6">Manage Categories</h2>
                             <form onSubmit={handleCategorySubmit} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">Category Name</label>
+                                    <label className="block text-xs font-bold text-indigo-300 mb-1.5 ml-1 uppercase tracking-widest">Category Name</label>
                                     <div className="flex gap-2">
                                         <Input
                                             required
                                             value={categoryName}
                                             onChange={(e) => setCategoryName(e.target.value)}
                                             placeholder="e.g. Food, Rent"
-                                            className="bg-slate-50 border-slate-200"
+                                            className="bg-white/5 border-white/10 text-white placeholder:text-indigo-400/30 focus:bg-white/10 transition-all"
                                         />
-                                        <Button type="submit" disabled={loading} className="px-4 bg-slate-900 hover:bg-slate-800">
+                                        <Button type="submit" disabled={loading} className="px-4 bg-rose-600 hover:bg-rose-700 text-white">
                                             {editingCategory ? <Save size={18} /> : <Plus size={18} />}
                                         </Button>
                                     </div>
                                 </div>
                             </form>
                             <div className="mt-8 space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Your Categories</h3>
+                                <h3 className="text-xs font-black text-indigo-400 uppercase tracking-[0.2em] mb-3">Your Categories</h3>
                                 {categories.map(cat => (
-                                    <div key={cat.id} className="group flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-rose-200 hover:bg-rose-50/30 transition-all">
+                                    <div key={cat.id} className="group flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-rose-500/30 hover:bg-white/10 transition-all">
                                         <div className="flex items-center gap-2">
-                                            <Tag size={14} className="text-slate-400" />
-                                            <span className="font-medium text-slate-700">{cat.name}</span>
+                                            <Tag size={14} className="text-indigo-400" />
+                                            <span className="font-bold text-white/90">{cat.name}</span>
                                         </div>
                                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button onClick={() => { setEditingCategory(cat); setCategoryName(cat.name); }} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-white rounded-lg"><Edit3 size={14} /></button>
-                                            <button onClick={() => handleCategoryDelete(cat)} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-white rounded-lg"><Trash2 size={14} /></button>
+                                            <button onClick={() => { setEditingCategory(cat); setCategoryName(cat.name); }} className="p-1.5 text-indigo-300 hover:text-indigo-400 hover:bg-white/5 rounded-lg transition-all"><Edit3 size={14} /></button>
+                                            <button onClick={() => handleCategoryDelete(cat)} className="p-1.5 text-rose-300 hover:text-rose-400 hover:bg-white/5 rounded-lg transition-all"><Trash2 size={14} /></button>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </Card>
                     </div>
                 </div>
             )}
@@ -162,56 +163,56 @@ export default function Expenditure() {
             {activeTab === 'expense' && (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-1">
-                        <div className="bg-white rounded-2xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 sticky top-8">
-                            <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <Card className="p-8 sticky top-8 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
+                            <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                                 {editingExpense ? 'Edit Expense' : 'Add Expense'}
                             </h2>
                             <form onSubmit={handleExpenseSubmit} className="space-y-5">
                                 <div className="space-y-1.5">
-                                    <label className="text-sm font-semibold text-slate-700 ml-1">Category</label>
+                                    <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Category</label>
                                     <select
                                         required
                                         value={categoryId}
                                         onChange={(e) => setCategoryId(e.target.value)}
-                                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 outline-none transition-all"
+                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:bg-white/10 focus:ring-2 focus:ring-rose-500/20 outline-none transition-all appearance-none"
                                     >
-                                        <option value="">Select Category...</option>
-                                        {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                        <option value="" className="bg-slate-900 text-indigo-300">Select Category...</option>
+                                        {categories.map(c => <option key={c.id} value={c.id} className="bg-slate-900 text-white">{c.name}</option>)}
                                     </select>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-sm font-semibold text-slate-700 ml-1">Paid From</label>
+                                    <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Paid From</label>
                                     <div className="relative">
-                                        <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" size={18} />
                                         <select
                                             required
                                             value={cardId}
                                             onChange={(e) => setCardId(e.target.value)}
                                             disabled={editingExpense}
-                                            className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-slate-900 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 outline-none transition-all disabled:bg-slate-100"
+                                            className="w-full rounded-xl border border-white/10 bg-white/5 pl-11 pr-4 py-3 text-white focus:bg-white/10 focus:ring-2 focus:ring-rose-500/20 outline-none transition-all disabled:bg-white/10 disabled:opacity-50 appearance-none"
                                         >
-                                            <option value="">Select Payment Method...</option>
-                                            {cards.map(c => <option key={c.id} value={c.id}>{c.name} (${c.balance})</option>)}
+                                            <option value="" className="bg-slate-900 text-indigo-300">Select Payment Method...</option>
+                                            {cards.map(c => <option key={c.id} value={c.id} className="bg-slate-900 text-white">{c.name} (${c.balance})</option>)}
                                         </select>
                                     </div>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-sm font-semibold text-slate-700 ml-1">Date</label>
+                                    <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Date</label>
                                     <div className="relative">
-                                        <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" size={18} />
                                         <Input
                                             type="date"
                                             required
                                             value={date}
                                             onChange={(e) => setDate(e.target.value)}
-                                            className="pl-11 bg-slate-50 border-slate-200"
+                                            className="pl-11 bg-white/5 border-white/10 text-white focus:bg-white/10"
                                         />
                                     </div>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-sm font-semibold text-slate-700 ml-1">Amount</label>
+                                    <label className="text-xs font-bold text-indigo-300 uppercase tracking-widest ml-1">Amount</label>
                                     <div className="relative">
-                                        <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-rose-500" size={18} />
+                                        <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-rose-400" size={18} />
                                         <Input
                                             type="number"
                                             required
@@ -219,7 +220,7 @@ export default function Expenditure() {
                                             value={amount}
                                             onChange={(e) => setAmount(e.target.value)}
                                             disabled={editingExpense}
-                                            className="pl-11 bg-slate-50 border-slate-200 font-semibold text-lg text-rose-700"
+                                            className="pl-11 bg-white/10 border-white/20 font-bold text-lg text-rose-400 focus:bg-white/20"
                                             placeholder="0.00"
                                         />
                                     </div>
@@ -229,54 +230,54 @@ export default function Expenditure() {
                                         {loading ? 'Processing...' : (editingExpense ? 'Update' : 'Confirm Expense')}
                                     </Button>
                                     {editingExpense && (
-                                        <Button type="button" variant="secondary" onClick={() => { setEditingExpense(null); setCategoryId(''); setCardId(''); setAmount(''); }} className="px-6">
+                                        <Button type="button" variant="secondary" onClick={() => { setEditingExpense(null); setCategoryId(''); setCardId(''); setAmount(''); }} className="px-6 rounded-xl bg-white/5 text-indigo-300 border-white/10 hover:bg-white/10 transition-all">
                                             Cancel
                                         </Button>
                                     )}
                                 </div>
                             </form>
-                        </div>
+                        </Card>
                     </div>
                     <div className="lg:col-span-2">
-                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
-                            <h2 className="text-xl font-bold text-slate-900 mb-6">Expense History</h2>
-                            <div className="overflow-hidden rounded-xl border border-slate-200">
+                        <Card className="p-8 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
+                            <h2 className="text-xl font-bold text-white mb-6">Expense History</h2>
+                            <div className="overflow-hidden rounded-xl border border-white/5">
                                 <table className="w-full text-left text-sm">
-                                    <thead className="bg-slate-50 text-slate-500">
+                                    <thead className="bg-white/5 text-indigo-300">
                                         <tr>
-                                            <th className="px-6 py-4 font-semibold">Date</th>
-                                            <th className="px-6 py-4 font-semibold">Category</th>
-                                            <th className="px-6 py-4 font-semibold">Paid Via</th>
-                                            <th className="px-6 py-4 font-semibold text-right">Amount</th>
-                                            <th className="px-6 py-4 font-semibold text-right">Actions</th>
+                                            <th className="px-6 py-4 font-bold uppercase tracking-wider text-xs">Date</th>
+                                            <th className="px-6 py-4 font-bold uppercase tracking-wider text-xs">Category</th>
+                                            <th className="px-6 py-4 font-bold uppercase tracking-wider text-xs">Paid Via</th>
+                                            <th className="px-6 py-4 font-bold uppercase tracking-wider text-xs text-right">Amount</th>
+                                            <th className="px-6 py-4 font-bold uppercase tracking-wider text-xs text-right">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-100 bg-white">
+                                    <tbody className="divide-y divide-white/5 bg-transparent">
                                         {expenses.map((item) => (
-                                            <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
-                                                <td className="px-6 py-4 text-slate-600 font-medium">{format(new Date(item.date), 'MMM dd, yyyy')}</td>
+                                            <tr key={item.id} className="hover:bg-white/5 transition-colors group">
+                                                <td className="px-6 py-4 text-white font-bold">{format(new Date(item.date), 'MMM dd, yyyy')}</td>
                                                 <td className="px-6 py-4">
-                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800">
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/10 text-rose-400">
                                                         {categories.find(c => c.id === item.categoryId)?.name || 'Unknown'}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 text-slate-600">
+                                                <td className="px-6 py-4 text-white/70">
                                                     {cards.find(c => c.id === item.cardId)?.name || 'Unknown'}
                                                 </td>
-                                                <td className="px-6 py-4 text-right font-bold text-rose-600">
+                                                <td className="px-6 py-4 text-right font-black text-rose-400">
                                                     -${item.amount.toLocaleString()}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button onClick={() => handleExpenseEdit(item)} className="p-2 text-slate-400 hover:text-indigo-600 bg-white border border-transparent hover:border-slate-200 rounded-lg shadow-sm transition-all"><Edit3 size={14} /></button>
-                                                        <button onClick={() => handleExpenseDelete(item)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-transparent hover:border-slate-200 rounded-lg shadow-sm transition-all"><Trash2 size={14} /></button>
+                                                        <button onClick={() => handleExpenseEdit(item)} className="p-2 text-slate-400 hover:text-indigo-400 bg-white/5 border border-transparent hover:border-white/10 rounded-lg transition-all"><Edit3 size={14} /></button>
+                                                        <button onClick={() => handleExpenseDelete(item)} className="p-2 text-slate-400 hover:text-rose-400 bg-white/5 border border-transparent hover:border-white/10 rounded-lg transition-all"><Trash2 size={14} /></button>
                                                     </div>
                                                 </td>
                                             </tr>
                                         ))}
                                         {expenses.length === 0 && (
                                             <tr>
-                                                <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                                                <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
                                                     No expense records found.
                                                 </td>
                                             </tr>
@@ -284,7 +285,7 @@ export default function Expenditure() {
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </Card>
                     </div>
                 </div>
             )}

@@ -10,6 +10,7 @@ import Expenditure from './pages/Expenditure';
 import CardPage from './pages/Card';
 import Exchange from './pages/Exchange';
 import OnCredit from './pages/OnCredit';
+import Investments from './pages/Investments';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="card" element={<CardPage />} />
             <Route path="exchange" element={<Exchange />} />
             <Route path="on-credit" element={<OnCredit />} />
+            <Route path="investments" element={<Investments />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
