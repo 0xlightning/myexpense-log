@@ -615,6 +615,37 @@ export default function Dashboard() {
                         </div>
                     </div>
 
+                    {/* Annual Summary Table - High Impact Totals */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="bg-white/70 backdrop-blur-xl p-6 rounded-2xl border border-white/40 shadow-xl flex items-center justify-between group hover:bg-emerald-50/50 transition-colors">
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Income</p>
+                                <p className="text-2xl font-black text-slate-900 group-hover:text-emerald-600 transition-colors italic">${yearlyFiltered.totalIncome.toLocaleString()}</p>
+                            </div>
+                            <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100 group-hover:bg-white transition-all">
+                                <TrendingUp className="text-emerald-500" size={24} />
+                            </div>
+                        </div>
+                        <div className="bg-white/70 backdrop-blur-xl p-6 rounded-2xl border border-white/40 shadow-xl flex items-center justify-between group hover:bg-rose-50/50 transition-colors">
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Expenses</p>
+                                <p className="text-2xl font-black text-slate-900 group-hover:text-rose-600 transition-colors italic">${yearlyFiltered.totalExpense.toLocaleString()}</p>
+                            </div>
+                            <div className="p-3 bg-rose-50 rounded-xl border border-rose-100 group-hover:bg-white transition-all">
+                                <TrendingDown className="text-rose-500" size={24} />
+                            </div>
+                        </div>
+                        <div className="bg-white/70 backdrop-blur-xl p-6 rounded-2xl border border-white/40 shadow-xl flex items-center justify-between group hover:bg-indigo-50/50 transition-colors">
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Yearly Savings</p>
+                                <p className="text-2xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors italic">${(yearlyFiltered.totalIncome - yearlyFiltered.totalExpense).toLocaleString()}</p>
+                            </div>
+                            <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-100 group-hover:bg-white transition-all">
+                                <Banknote className="text-indigo-500" size={24} />
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Breakdown by Category */}
                         <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-8 border border-white/40 shadow-xl">
