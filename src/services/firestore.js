@@ -24,6 +24,7 @@ export const collections = {
     income_records: 'income_records',
     expense_categories: 'expense_categories',
     expenditure_records: 'expenditure_records',
+    investment_categories: 'investment_categories',
     cards: 'cards',
     on_credit: 'on_credit',
     transfers: 'transfers',
