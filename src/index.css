@@ -6,12 +6,38 @@
   :root {
     --zoho-blue: #0067ff;
     --zoho-blue-dark: #0056d6;
+    --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --card-shadow-hover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --card-border: 1px solid #e2e8f0;
+    --card-radius: 0.75rem;
   }
 
   body {
     @apply bg-slate-50 text-slate-900 antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+@layer components {
+  .card-standard {
+    @apply bg-white border border-slate-200 rounded-xl shadow-sm transition-all duration-300;
+  }
+
+  .card-standard:hover {
+    @apply shadow-md border-[#0067ff]/30;
+  }
+
+  .table-standard {
+    @apply w-full text-left text-sm;
+  }
+
+  .table-header-standard {
+    @apply bg-slate-50 text-slate-500 border-b border-slate-200 text-[10px] font-bold uppercase tracking-widest;
+  }
+
+  .badge-standard {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase border;
   }
 }
 

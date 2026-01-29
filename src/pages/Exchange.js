@@ -4,6 +4,7 @@ import { subscribeToCollection, collections } from '../services/firestore';
 import { performTransfer } from '../services/transactions';
 import { format } from 'date-fns';
 import { ArrowRightLeft, ArrowRight, Wallet, Plus, Send, Calendar, DollarSign } from 'lucide-react';
+import { Card } from '../components/ui/Card';
 import { Modal } from '../components/ui/Modal';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -59,10 +60,10 @@ export default function Exchange() {
     };
 
     return (
-        <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
+        <div className="space-y-8 animate-fade-in max-w-[1600px] mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3 uppercase">
+                    <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase">
                         <ArrowRightLeft className="text-[#0067ff]" size={28} />
                         Money Transfer
                     </h1>
@@ -71,62 +72,62 @@ export default function Exchange() {
             </div>
 
             {/* Transfer History - Full Width */}
-            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-8">
+            <Card className="p-8">
                 <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-widest">
                     <ArrowRightLeft size={24} className="text-slate-400" /> Transfer History
                 </h2>
 
                 <div className="space-y-4">
-                    {transfers.map((t) => (
-                        <div key={t.id} className="group flex items-center justify-between p-4 rounded-xl bg-white border border-slate-100 hover:border-[#0067ff]/30 hover:shadow-sm transition-all">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-100 group-hover:bg-white transition-colors">
-                                    <ArrowRightLeft size={20} className="text-indigo-600" />
+                    {([...transfers]).sort((a, b) => new Date(b.date) - new Date(a.date)).map((t) => (
+                        <div key={t.id} className="group flex items-center justify-between p-5 rounded-2xl bg-white border border-slate-100/80 hover:border-[#0067ff]/30 hover:shadow-md transition-all duration-300">
+                            <div className="flex items-center gap-5">
+                                <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100 group-hover:bg-white transition-colors">
+                                    <ArrowRightLeft size={22} className="text-[#0067ff]" />
                                 </div>
                                 <div>
-                                    <p className="font-bold text-slate-900 text-sm">Transfer</p>
-                                    <p className="text-xs text-slate-500 mt-0.5 font-bold">{format(new Date(t.date), 'MMM dd, yyyy')}</p>
+                                    <p className="font-black text-slate-900 text-sm uppercase tracking-tight">External Transfer</p>
+                                    <p className="text-xs text-slate-400 mt-1 font-bold">{format(new Date(t.date), 'MMM dd, yyyy')}</p>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 md:gap-8 overflow-hidden px-4">
-                                <div className="text-right">
-                                    <p className="text-xs font-semibold text-slate-500 mb-0.5">From</p>
-                                    <p className="text-sm font-medium text-slate-900 truncate max-w-[100px]">
+                            <div className="flex items-center gap-4 md:gap-12 overflow-hidden px-4 flex-1 justify-center">
+                                <div className="text-right flex-1 min-w-0">
+                                    <p className="text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-widest">Source</p>
+                                    <p className="text-sm font-black text-slate-800 truncate">
                                         {cards.find(c => c.id === t.fromCardId)?.name || '...'}
                                     </p>
                                 </div>
-                                <div className="text-slate-300">
-                                    <ArrowRight size={16} />
+                                <div className="bg-slate-50 p-2 rounded-full border border-slate-100 text-[#0067ff]">
+                                    <ArrowRight size={16} strokeWidth={3} />
                                 </div>
-                                <div className="text-left">
-                                    <p className="text-xs font-semibold text-slate-500 mb-0.5">To</p>
-                                    <p className="text-sm font-medium text-slate-900 truncate max-w-[100px]">
+                                <div className="text-left flex-1 min-w-0">
+                                    <p className="text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-widest">Target</p>
+                                    <p className="text-sm font-black text-slate-800 truncate">
                                         {cards.find(c => c.id === t.toCardId)?.name || '...'}
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="text-right pl-4">
-                                <span className="block text-lg font-bold text-slate-900">${t.amount.toLocaleString()}</span>
-                                {t.notes && <span className="text-xs text-slate-400 max-w-[150px] truncate block">{t.notes}</span>}
+                            <div className="text-right pl-6 border-l border-slate-100">
+                                <span className="block text-xl font-black text-slate-900">${t.amount.toLocaleString()}</span>
+                                {t.notes && <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight mt-1 truncate block max-w-[150px]">{t.notes}</span>}
                             </div>
                         </div>
                     ))}
 
                     {transfers.length === 0 && (
-                        <div className="text-center py-20 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                        <div className="text-center py-24 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
                             <Wallet size={48} className="mx-auto text-slate-300 mb-4" />
-                            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No transfer history yet</p>
+                            <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">No transfer history yet</p>
                         </div>
                     )}
                 </div>
-            </div>
+            </Card>
 
             {/* Floating Action Button */}
             <button
                 onClick={handleAddNew}
-                className="fixed bottom-8 right-8 w-16 h-16 bg-[#0067ff] hover:bg-[#0056d6] text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-40"
+                className="fixed bottom-8 right-8 w-16 h-16 bg-[#0067ff] hover:bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-40 border-4 border-white"
                 title="New Transfer"
             >
                 <Plus size={28} />
@@ -142,52 +143,58 @@ export default function Exchange() {
                     setAmount('');
                     setNotes('');
                 }}
-                title="New Transfer"
+                title="New Money Transfer"
                 size="md"
             >
-                <form onSubmit={handleTransfer} className="space-y-5">
-                    <div className="space-y-1.5">
+                <form onSubmit={handleTransfer} className="space-y-6">
+                    <div className="space-y-2">
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Source Account</label>
-                        <select
-                            required
-                            className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all appearance-none text-sm"
-                            value={fromCardId}
-                            onChange={(e) => setFromCardId(e.target.value)}
-                        >
-                            <option value="" className="bg-white text-slate-400">Select Source...</option>
-                            {cards.map(c => (
-                                <option key={c.id} value={c.id} className="bg-white text-slate-900">
-                                    {c.name} (${c.balance})
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="flex justify-center -my-2 relative z-20">
-                        <div className="bg-indigo-50 rounded-full p-2 border border-indigo-100 shadow-inner">
-                            <ArrowRight className="text-indigo-600 transform rotate-90" size={16} />
+                        <div className="relative">
+                            <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                            <select
+                                required
+                                className="w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all appearance-none text-sm font-medium"
+                                value={fromCardId}
+                                onChange={(e) => setFromCardId(e.target.value)}
+                            >
+                                <option value="">Select Source...</option>
+                                {cards.map(c => (
+                                    <option key={c.id} value={c.id}>
+                                        {c.name} (${c.balance})
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
 
-                    <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Destination Account</label>
-                        <select
-                            required
-                            className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all text-sm appearance-none"
-                            value={toCardId}
-                            onChange={(e) => setToCardId(e.target.value)}
-                        >
-                            <option value="" className="bg-white text-slate-400">Select Destination...</option>
-                            {cards.filter(c => c.id !== fromCardId).map(c => (
-                                <option key={c.id} value={c.id} className="bg-white text-slate-900">
-                                    {c.name}
-                                </option>
-                            ))}
-                        </select>
+                    <div className="flex justify-center -my-2 relative z-20">
+                        <div className="bg-blue-50 rounded-full p-2 border border-blue-100 shadow-sm">
+                            <ArrowRight className="text-[#0067ff] transform rotate-90" size={16} strokeWidth={3} />
+                        </div>
                     </div>
 
-                    <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Amount</label>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Destination Account</label>
+                        <div className="relative">
+                            <Send className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                            <select
+                                required
+                                className="w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all appearance-none text-sm font-medium"
+                                value={toCardId}
+                                onChange={(e) => setToCardId(e.target.value)}
+                            >
+                                <option value="">Select Destination...</option>
+                                {cards.filter(c => c.id !== fromCardId).map(c => (
+                                    <option key={c.id} value={c.id}>
+                                        {c.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Transfer Amount</label>
                         <div className="relative">
                             <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0067ff]" size={18} />
                             <Input
@@ -198,14 +205,14 @@ export default function Exchange() {
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
                                 placeholder="0.00"
-                                className="pl-11 bg-white border-slate-200 font-bold text-lg text-slate-900 focus:ring-[#0067ff]/10"
+                                className="pl-11 bg-white font-black text-xl"
                             />
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Date</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Transfer Date</label>
                             <div className="relative">
                                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                                 <Input
@@ -213,26 +220,23 @@ export default function Exchange() {
                                     required
                                     value={date}
                                     onChange={(e) => setDate(e.target.value)}
-                                    className="pl-11 bg-white border-slate-200 text-slate-900 focus:border-[#0067ff]/50"
+                                    className="pl-11"
                                 />
                             </div>
                         </div>
-                        <div className="space-y-1.5">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Note (Optional)</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Reference Note</label>
                             <Input
                                 type="text"
                                 value={notes}
                                 onChange={(e) => setNotes(e.target.value)}
-                                placeholder="Reference"
-                                className="bg-white border-slate-200 text-slate-900 placeholder-slate-300 focus:border-[#0067ff]/50"
+                                placeholder="Optional"
+                                className="bg-white"
                             />
                         </div>
                     </div>
 
-                    <div className="flex gap-3 mt-6 pt-4 border-t border-slate-100">
-                        <Button type="submit" disabled={loading} className="flex-1 bg-[#0067ff] hover:bg-[#0056d6] shadow-sm transition-all h-12 text-base font-bold uppercase">
-                            {loading ? 'Processing...' : 'Confirm Transfer'}
-                        </Button>
+                    <div className="flex gap-3 mt-8 pt-6 border-t border-slate-100">
                         <Button
                             type="button"
                             onClick={() => {
@@ -242,9 +246,12 @@ export default function Exchange() {
                                 setAmount('');
                                 setNotes('');
                             }}
-                            className="px-6 rounded-xl bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 transition-all"
+                            className="flex-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border-none h-12 text-xs font-bold uppercase tracking-widest"
                         >
                             Cancel
+                        </Button>
+                        <Button type="submit" disabled={loading} className="flex-[2] bg-[#0067ff] hover:bg-blue-600 shadow-lg shadow-blue-200 transition-all h-12 text-xs font-bold uppercase tracking-widest">
+                            {loading ? 'Processing...' : 'Confirm Transfer'}
                         </Button>
                     </div>
                 </form>

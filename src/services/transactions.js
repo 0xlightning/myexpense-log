@@ -290,7 +290,7 @@ export const createCard = async (userId, { name, type, initialBalance, creditLim
 /**
  * Adds an investment record and updates the corresponding card balance atomically.
  */
-export const addInvestmentTransaction = async (userId, { amount, date, cardId, category, notes }) => {
+export const addInvestmentTransaction = async (userId, { amount, date, cardId, categoryId, notes }) => {
     try {
         await runTransaction(db, async (transaction) => {
             const cardRef = doc(db, `users/${userId}/${collections.cards}`, cardId);
@@ -311,7 +311,7 @@ export const addInvestmentTransaction = async (userId, { amount, date, cardId, c
                 amount,
                 date,
                 cardId,
-                category: category || 'General',
+                categoryId: categoryId || 'General',
                 notes: notes || '',
                 createdAt: serverTimestamp()
             });
@@ -322,9 +322,9 @@ export const addInvestmentTransaction = async (userId, { amount, date, cardId, c
                 amount,
                 date,
                 cardId,
-                category: category,
+                categoryId: categoryId,
                 refId: investRef.id,
-                description: `Investment in ${category}`,
+                description: `Investment in ${categoryId}`,
                 createdAt: serverTimestamp()
             });
         });

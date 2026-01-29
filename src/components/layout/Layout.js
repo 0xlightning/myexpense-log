@@ -15,7 +15,7 @@ export function Layout() {
             <Sidebar />
 
             <main className="relative z-10 transition-all duration-300 md:ml-72 min-h-screen">
-                <div className="container mx-auto p-6 md:p-10 max-w-7xl animate-fade-in">
+                <div className="p-4 md:p-8 lg:p-10 max-w-[1600px] mx-auto animate-fade-in">
                     <Outlet />
                 </div>
             </main>

@@ -125,11 +125,11 @@ export default function Income() {
     };
 
     return (
-        <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
+        <div className="space-y-8 animate-fade-in max-w-[1600px] mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3 uppercase">
-                        <TrendingUp className="text-emerald-600" size={28} />
+                    <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase">
+                        <TrendingUp className="text-[#0067ff]" size={28} />
                         Income
                     </h1>
                     <p className="text-slate-500 mt-1 font-medium">Track your earnings and deposits with precision.</p>
@@ -145,7 +145,7 @@ export default function Income() {
             {activeTab === 'manage' && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="md:col-span-2">
-                        <Card className="p-6 sticky top-8 bg-white border border-slate-200 shadow-sm">
+                        <Card className="p-8 sticky top-8">
                             <h2 className="text-base font-bold text-slate-900 mb-6 uppercase tracking-widest">Manage Sources</h2>
                             <form onSubmit={handleSourceSubmit} className="space-y-4">
                                 <div>
@@ -156,22 +156,22 @@ export default function Income() {
                                             value={sourceName}
                                             onChange={(e) => setSourceName(e.target.value)}
                                             placeholder="e.g. Salary, Dividend"
-                                            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-[#0067ff]/10 transition-all"
+                                            className="bg-white"
                                         />
-                                        <Button type="submit" disabled={loading} className="px-4 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">
+                                        <Button type="submit" disabled={loading} className="px-4 bg-[#0067ff] hover:bg-blue-600 text-white shadow-sm">
                                             {editingSource ? <Save size={18} /> : <Plus size={18} />}
                                         </Button>
                                     </div>
                                 </div>
                             </form>
-                            <div className="mt-8 space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                                <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Your Sources</h3>
+                            <div className="mt-8 space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                                <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Your Sources</h3>
                                 {sources.map(source => (
-                                    <div key={source.id} className="group flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-emerald-500/30 hover:bg-white transition-all">
+                                    <div key={source.id} className="group flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-[#0067ff]/30 hover:bg-white transition-all duration-300">
                                         <span className="font-bold text-slate-700">{source.name}</span>
                                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button onClick={() => { setEditingSource(source); setSourceName(source.name); }} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"><Edit3 size={14} /></button>
-                                            <button onClick={() => handleSourceDelete(source)} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"><Trash2 size={14} /></button>
+                                            <button onClick={() => { setEditingSource(source); setSourceName(source.name); }} className="p-2 text-slate-400 hover:text-[#0067ff] hover:bg-blue-50 rounded-lg transition-all"><Edit3 size={14} /></button>
+                                            <button onClick={() => handleSourceDelete(source)} className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"><Trash2 size={14} /></button>
                                         </div>
                                     </div>
                                 ))}
@@ -182,36 +182,36 @@ export default function Income() {
             )}
 
             {activeTab === 'income' && (
-                <Card className="p-8 bg-white border border-slate-200 shadow-sm">
+                <Card className="p-8">
                     <h2 className="text-lg font-bold text-slate-900 mb-6 uppercase tracking-widest">Income History</h2>
                     <div className="overflow-hidden rounded-xl border border-slate-200">
-                        <table className="w-full text-left text-sm">
-                            <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 text-[10px]">
+                        <table className="table-standard">
+                            <thead className="table-header-standard">
                                 <tr>
-                                    <th className="px-6 py-4 font-bold uppercase tracking-widest">Date</th>
-                                    <th className="px-6 py-4 font-bold uppercase tracking-widest">Source</th>
-                                    <th className="px-6 py-4 font-bold uppercase tracking-widest">Deposited To</th>
-                                    <th className="px-6 py-4 font-bold uppercase tracking-widest text-right">Amount</th>
-                                    <th className="px-6 py-4 font-bold uppercase tracking-widest text-right">Actions</th>
+                                    <th className="px-6 py-4">Date</th>
+                                    <th className="px-6 py-4">Source</th>
+                                    <th className="px-6 py-4">Deposited To</th>
+                                    <th className="px-6 py-4 text-right">Amount</th>
+                                    <th className="px-6 py-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100 bg-transparent">
-                                {items.map((item) => (
-                                    <tr key={item.id} className="hover:bg-indigo-50/30 transition-colors group">
-                                        <td className="px-6 py-4 text-slate-900 font-bold">{format(new Date(item.date), 'MMM dd, yyyy')}</td>
+                            <tbody className="divide-y divide-slate-100">
+                                {([...items]).sort((a, b) => new Date(b.date) - new Date(a.date)).map((item) => (
+                                    <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
+                                        <td className="px-6 py-4 font-bold text-slate-900">{format(new Date(item.date), 'MMM dd, yyyy')}</td>
                                         <td className="px-6 py-4">
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                            <span className="badge-standard bg-emerald-50 text-emerald-600 border-emerald-100">
                                                 {sources.find(s => s.id === item.sourceId)?.name || 'Unknown'}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-slate-500 font-medium">
+                                        <td className="px-6 py-4 text-slate-500 font-medium italic">
                                             {cards.find(c => c.id === item.cardId)?.name || 'Unknown Card'}
                                         </td>
-                                        <td className="px-6 py-4 text-right font-bold text-emerald-600">
+                                        <td className="px-6 py-4 text-right font-black text-emerald-600 text-lg">
                                             +${item.amount.toLocaleString()}
                                         </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <td className="px-6 py-4">
+                                            <div className="flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-all duration-300">
                                                 <button onClick={() => handleItemRepeat(item)} className="p-2 text-slate-400 hover:text-[#0067ff] bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110" title="Repeat Payment"><RotateCcw size={14} /></button>
                                                 <button onClick={() => handleItemEdit(item)} className="p-2 text-slate-400 hover:text-indigo-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Edit3 size={14} /></button>
                                                 <button onClick={() => handleItemDelete(item)} className="p-2 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg shadow-sm transition-all hover:scale-110"><Trash2 size={14} /></button>
@@ -253,24 +253,25 @@ export default function Income() {
                     setCardId('');
                     setAmount('');
                 }}
-                title={editingItem ? 'Edit Income' : 'Add Income'}
+                title={editingItem ? 'Edit Income Record' : 'Add New Income'}
                 size="md"
             >
-                <form onSubmit={handleItemSubmit} className="space-y-5">
-                    <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Source</label>
+                <form onSubmit={handleItemSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Source of Income</label>
                         <select
                             required
                             value={sourceId}
                             onChange={(e) => setSourceId(e.target.value)}
-                            className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all appearance-none text-sm"
+                            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all appearance-none text-sm font-medium"
                         >
-                            <option value="" className="bg-white text-slate-400">Select Source...</option>
-                            {sources.map(s => <option key={s.id} value={s.id} className="bg-white text-slate-900">{s.name}</option>)}
+                            <option value="">Select Source...</option>
+                            {sources.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                         </select>
                     </div>
-                    <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Deposit To</label>
+
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Deposit To Account</label>
                         <div className="relative">
                             <Wallet2 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                             <select
@@ -278,46 +279,47 @@ export default function Income() {
                                 value={cardId}
                                 onChange={(e) => setCardId(e.target.value)}
                                 disabled={editingItem}
-                                className="w-full rounded-lg border border-slate-200 bg-white pl-11 pr-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all disabled:bg-slate-50 disabled:opacity-50 appearance-none text-sm"
+                                className="w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all disabled:bg-slate-50 disabled:opacity-50 appearance-none text-sm font-medium"
                             >
-                                <option value="" className="bg-white text-slate-400">Select Account...</option>
-                                {cards.map(c => <option key={c.id} value={c.id} className="bg-white text-slate-900">{c.name} (${c.balance})</option>)}
+                                <option value="">Select Account...</option>
+                                {cards.map(c => <option key={c.id} value={c.id}>{c.name} (${c.balance.toLocaleString()})</option>)}
                             </select>
                         </div>
                     </div>
-                    <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Date</label>
-                        <div className="relative">
-                            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                            <Input
-                                type="date"
-                                required
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}
-                                className="pl-11 bg-white border-slate-200 text-slate-900 focus:border-[#0067ff]/50"
-                            />
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Transaction Date</label>
+                            <div className="relative">
+                                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                <Input
+                                    type="date"
+                                    required
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                    className="pl-11"
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Amount</label>
+                            <div className="relative">
+                                <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600" size={18} />
+                                <Input
+                                    type="number"
+                                    required
+                                    step="0.01"
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                    disabled={editingItem}
+                                    className="pl-11 font-black text-lg"
+                                    placeholder="0.00"
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Amount</label>
-                        <div className="relative">
-                            <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600" size={18} />
-                            <Input
-                                type="number"
-                                required
-                                step="0.01"
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                                disabled={editingItem}
-                                className="pl-11 bg-white border-slate-200 font-bold text-lg text-slate-900 focus:ring-[#0067ff]/10"
-                                placeholder="0.00"
-                            />
-                        </div>
-                    </div>
-                    <div className="flex gap-3 mt-6 pt-4 border-t border-slate-100">
-                        <Button type="submit" disabled={loading} className="flex-1 bg-emerald-600 hover:bg-emerald-700 shadow-sm transition-all h-12 text-base font-bold uppercase">
-                            {loading ? 'Processing...' : (editingItem ? 'Update' : 'Confirm Income')}
-                        </Button>
+
+                    <div className="flex gap-3 mt-8 pt-6 border-t border-slate-100">
                         <Button
                             type="button"
                             onClick={() => {
@@ -327,9 +329,12 @@ export default function Income() {
                                 setCardId('');
                                 setAmount('');
                             }}
-                            className="px-6 rounded-xl bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 transition-all"
+                            className="flex-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border-none h-12 text-xs font-bold uppercase tracking-widest"
                         >
                             Cancel
+                        </Button>
+                        <Button type="submit" disabled={loading} className="flex-[2] bg-[#0067ff] hover:bg-blue-600 shadow-lg shadow-blue-200 transition-all h-12 text-xs font-bold uppercase tracking-widest">
+                            {loading ? 'Processing...' : (editingItem ? 'Update Record' : 'Confirm Income')}
                         </Button>
                     </div>
                 </form>

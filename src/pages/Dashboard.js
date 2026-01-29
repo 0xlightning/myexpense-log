@@ -4,7 +4,7 @@ import { subscribeToCollection, collections } from '../services/firestore';
 import { Card } from '../components/ui/Card';
 import { Tabs } from '../components/ui/Tabs';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, AreaChart, Area } from 'recharts';
-import { Wallet, ArrowUpRight, ArrowDownRight, CreditCard, Activity, TrendingUp, TrendingDown, Banknote, Briefcase } from 'lucide-react';
+import { Wallet, ArrowUpRight, ArrowDownRight, CreditCard, Activity, TrendingUp, TrendingDown, Banknote, Briefcase, AlertCircle } from 'lucide-react';
 
 const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
 
@@ -290,88 +290,84 @@ export default function Dashboard() {
             {activeTab === 'all' && (
                 <div className="space-y-8">
                     {/* Summary Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                        {/* Net Worth - Premium Card */}
-                        <div className="relative group overflow-hidden bg-white border border-slate-200 rounded-xl p-6 shadow-sm transition-all hover:border-[#0067ff]/30">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                        {/* Net Worth */}
+                        <Card className="p-6 relative overflow-hidden">
                             <div className="relative z-10">
-                                <div className="flex justify-between items-start mb-6">
+                                <div className="flex justify-between items-start mb-4">
                                     <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-100">
-                                        <Wallet size={24} className="text-indigo-600" />
+                                        <Wallet size={20} className="text-indigo-600" />
                                     </div>
-                                    <span className="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">
-                                        <TrendingUp size={12} /> Live
+                                    <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100 uppercase">
+                                        <Activity size={10} /> Live
                                     </span>
                                 </div>
-
-                                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Total Net Worth</p>
-                                <h3 className="text-2xl font-bold text-slate-900 mt-1 tracking-tight">
+                                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Net Worth</p>
+                                <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">
                                     ${netWorth.toLocaleString()}
                                 </h3>
                             </div>
-                        </div>
+                        </Card>
 
                         {/* Income */}
-                        <div className="bg-white rounded-xl p-6 border border-slate-200 hover:border-emerald-500/30 transition-all shadow-sm relative overflow-hidden">
+                        <Card className="p-6">
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-emerald-50 rounded-lg relative z-10 border border-emerald-100">
-                                    <ArrowUpRight size={24} className="text-emerald-600" />
+                                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                                    <ArrowUpRight size={20} className="text-emerald-600" />
                                 </div>
                             </div>
-                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest relative z-10">Total Income</p>
-                            <h3 className="text-2xl font-bold text-slate-900 mt-1 relative z-10">
+                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Total Income</p>
+                            <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">
                                 ${stats.income.toLocaleString()}
                             </h3>
-                        </div>
+                        </Card>
 
                         {/* Expense */}
-                        <div className="bg-white rounded-xl p-6 border border-slate-200 hover:border-rose-500/30 transition-all shadow-sm relative overflow-hidden">
+                        <Card className="p-6">
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-rose-50 rounded-lg relative z-10 border border-rose-100">
-                                    <ArrowDownRight size={24} className="text-rose-600" />
+                                <div className="p-3 bg-rose-50 rounded-xl border border-rose-100">
+                                    <ArrowDownRight size={20} className="text-rose-600" />
                                 </div>
                             </div>
-                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest relative z-10">Total Spending</p>
-                            <h3 className="text-2xl font-bold text-slate-900 mt-1 relative z-10">
+                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Total Spending</p>
+                            <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">
                                 ${stats.expense.toLocaleString()}
                             </h3>
-                        </div>
+                        </Card>
 
                         {/* Investment */}
-                        <div className="bg-white rounded-xl p-6 border border-slate-200 hover:border-[#0067ff]/30 transition-all shadow-sm relative overflow-hidden">
+                        <Card className="p-6">
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-blue-50 rounded-lg relative z-10 border border-blue-100">
-                                    <Briefcase size={24} className="text-[#0067ff]" />
+                                <div className="p-3 bg-blue-50 rounded-xl border border-blue-100">
+                                    <Briefcase size={20} className="text-[#0067ff]" />
                                 </div>
                             </div>
-                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest relative z-10">Total Investment</p>
-                            <h3 className="text-2xl font-bold text-slate-900 mt-1 relative z-10">
+                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Total Investment</p>
+                            <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">
                                 ${stats.investment.toLocaleString()}
                             </h3>
-                        </div>
+                        </Card>
 
                         {/* Credit */}
-                        <div className="bg-white rounded-xl p-6 border border-slate-200 hover:border-amber-500/30 transition-all shadow-sm relative overflow-hidden">
+                        <Card className="p-6">
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-amber-50 rounded-lg relative z-10 border border-amber-100">
-                                    <CreditCard size={24} className="text-amber-600" />
+                                <div className="p-3 bg-amber-50 rounded-xl border border-amber-100">
+                                    <CreditCard size={20} className="text-amber-600" />
                                 </div>
                             </div>
-                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest relative z-10">Credit Usage</p>
-                            <h3 className="text-2xl font-black text-slate-900 mt-1 relative z-10">
+                            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Credit Usage</p>
+                            <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">
                                 ${stats.credit.toLocaleString()}
                             </h3>
-                        </div>
+                        </Card>
                     </div>
 
                     {/* Charts Details */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Main Chart */}
-                        <div className="lg:col-span-2 bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                        <Card className="lg:col-span-2 p-8">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Spending Priority</h3>
-                                <div className="flex gap-2">
-                                    {/* Legend could go here */}
-                                </div>
                             </div>
                             <div className="h-[350px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -389,13 +385,13 @@ export default function Dashboard() {
                                             dataKey="name"
                                             axisLine={false}
                                             tickLine={false}
-                                            tick={{ fill: '#6b7280', fontSize: 12 }}
+                                            tick={{ fill: '#6b7280', fontSize: 10, fontWeight: 700 }}
                                             dy={10}
                                         />
                                         <YAxis
                                             axisLine={false}
                                             tickLine={false}
-                                            tick={{ fill: '#6b7280', fontSize: 12 }}
+                                            tick={{ fill: '#6b7280', fontSize: 10, fontWeight: 700 }}
                                             tickFormatter={(value) => `$${value}`}
                                         />
                                         <Tooltip
@@ -410,10 +406,10 @@ export default function Dashboard() {
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
-                        </div>
+                        </Card>
 
                         {/* Side Chart */}
-                        <div className="lg:col-span-1 bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                        <Card className="lg:col-span-1 p-8">
                             <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Distribution</h3>
                             <div className="h-[300px] w-full relative">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -447,15 +443,15 @@ export default function Dashboard() {
                                     <div key={i} className="flex items-center justify-between text-sm group">
                                         <div className="flex items-center gap-3">
                                             <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.fill }} />
-                                            <span className="text-slate-500 font-bold tracking-tight uppercase text-xs">{item.name}</span>
+                                            <span className="text-slate-500 font-bold tracking-tight uppercase text-[10px] tracking-widest">{item.name}</span>
                                         </div>
-                                        <span className="font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 transition-all group-hover:bg-indigo-50 group-hover:border-indigo-100">
+                                        <span className="font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 transition-all group-hover:bg-indigo-50 group-hover:border-indigo-100 text-xs">
                                             ${item.amount.toLocaleString()}
                                         </span>
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </Card>
                     </div>
                 </div>
             )}
@@ -465,20 +461,20 @@ export default function Dashboard() {
                     {/* Header with Selected Month */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <h2 className="text-4xl font-bold text-slate-900 tracking-tight uppercase">
+                            <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">
                                 {new Date(selectedMonth + '-01').toLocaleString('default', { month: 'long' })}
                                 {" "}{selectedMonth.split('-')[0]}
                             </h2>
-                            <p className="text-sm font-bold text-indigo-600/60 mt-1 uppercase tracking-widest">Monthly Performance Breakdown</p>
+                            <p className="text-[10px] font-bold text-indigo-600/60 mt-1 uppercase tracking-widest">Monthly Performance Breakdown</p>
                         </div>
 
                         {/* Month Filter Selector */}
-                        <div className="flex items-center gap-4 bg-white p-3 px-5 rounded-xl border border-slate-200 shadow-sm">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Select Period:</label>
+                        <div className="flex items-center gap-4 bg-white p-2 px-4 rounded-xl border border-slate-200 shadow-sm">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Select Period:</label>
                             <select
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="bg-transparent border-none text-sm font-bold text-slate-900 outline-none cursor-pointer pr-8 hover:text-[#0067ff] transition-colors"
+                                className="bg-transparent border-none text-xs font-bold text-slate-900 outline-none cursor-pointer hover:text-[#0067ff] transition-colors"
                             >
                                 {availableMonths.map(m => (
                                     <option key={m} value={m} className="bg-white text-slate-900">
@@ -489,35 +485,35 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                        <Card className="p-6 bg-white border border-slate-200 text-slate-900 relative overflow-hidden group shadow-sm">
-                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Net Worth</p>
-                            <h3 className="text-2xl font-bold tracking-tight">${netWorth.toLocaleString()}</h3>
-                            <div className="mt-4 flex items-center gap-2 text-[10px] text-slate-600 font-bold bg-slate-100 w-fit px-2 py-1 rounded-full border border-slate-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                        <Card className="p-6">
+                            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1">Net Worth</p>
+                            <h3 className="text-2xl font-black tracking-tight text-slate-900">${netWorth.toLocaleString()}</h3>
+                            <div className="mt-4 flex items-center gap-2 text-[10px] text-slate-400 font-bold bg-slate-50 w-fit px-2 py-0.5 rounded-full border border-slate-200">
                                 <Activity size={10} /> LIFETIME
                             </div>
                         </Card>
-                        <Card className="p-6 bg-white border border-slate-200 shadow-sm">
-                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Monthly Income</p>
-                            <h3 className="text-2xl font-bold text-emerald-600">${monthlyFiltered.income.toLocaleString()}</h3>
+                        <Card className="p-6">
+                            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1">Monthly Income</p>
+                            <h3 className="text-2xl font-black text-emerald-600 tracking-tight">${monthlyFiltered.income.toLocaleString()}</h3>
                         </Card>
-                        <Card className="p-6 bg-white border border-slate-200 shadow-sm">
-                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Monthly Spending</p>
-                            <h3 className="text-2xl font-bold text-rose-600">${monthlyFiltered.expense.toLocaleString()}</h3>
+                        <Card className="p-6">
+                            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1">Monthly Spending</p>
+                            <h3 className="text-2xl font-black text-rose-600 tracking-tight">${monthlyFiltered.expense.toLocaleString()}</h3>
                         </Card>
-                        <Card className="p-6 bg-white border border-slate-200 shadow-sm">
-                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Monthly Investment</p>
-                            <h3 className="text-2xl font-bold text-[#0067ff]">${monthlyFiltered.investment.toLocaleString()}</h3>
+                        <Card className="p-6">
+                            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1">Monthly Investment</p>
+                            <h3 className="text-2xl font-black text-[#0067ff] tracking-tight">${monthlyFiltered.investment.toLocaleString()}</h3>
                         </Card>
-                        <Card className="p-6 bg-white border border-slate-200 shadow-sm">
-                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Credit Usage</p>
-                            <h3 className="text-2xl font-bold text-amber-600">${monthlyFiltered.credit.toLocaleString()}</h3>
+                        <Card className="p-6">
+                            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1">Credit Usage</p>
+                            <h3 className="text-2xl font-black text-amber-600 tracking-tight">${monthlyFiltered.credit.toLocaleString()}</h3>
                         </Card>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Monthly Bar Chart */}
-                        <div className="lg:col-span-2 bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                        <Card className="lg:col-span-2 p-8">
                             <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Monthly Allocation</h3>
                             <div className="h-[350px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -535,13 +531,13 @@ export default function Dashboard() {
                                             dataKey="name"
                                             axisLine={false}
                                             tickLine={false}
-                                            tick={{ fill: '#6b7280', fontSize: 12 }}
+                                            tick={{ fill: '#6b7280', fontSize: 10, fontWeight: 700 }}
                                             dy={10}
                                         />
                                         <YAxis
                                             axisLine={false}
                                             tickLine={false}
-                                            tick={{ fill: '#6b7280', fontSize: 12 }}
+                                            tick={{ fill: '#6b7280', fontSize: 10, fontWeight: 700 }}
                                             tickFormatter={(value) => `$${value}`}
                                         />
                                         <Tooltip
@@ -556,10 +552,10 @@ export default function Dashboard() {
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
-                        </div>
+                        </Card>
 
                         {/* Monthly Distribution Pie Chart */}
-                        <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                        <Card className="p-8">
                             <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Monthly Split</h3>
                             <div className="h-[300px] relative">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -587,13 +583,13 @@ export default function Dashboard() {
                                     <div key={item.name} className="flex items-center justify-between text-sm group">
                                         <div className="flex items-center gap-2">
                                             <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.fill }} />
-                                            <span className="text-sm font-bold text-slate-500 uppercase tracking-tighter">{item.name}</span>
+                                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{item.name}</span>
                                         </div>
-                                        <span className="text-sm font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 group-hover:bg-indigo-50 transition-colors">${item.amount.toLocaleString()}</span>
+                                        <span className="text-xs font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 group-hover:bg-indigo-50 transition-colors tracking-tight">${item.amount.toLocaleString()}</span>
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </Card>
                     </div>
                 </div>
             )}
@@ -603,19 +599,19 @@ export default function Dashboard() {
                     {/* Header with Selected Year */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <h2 className="text-3xl font-bold text-slate-900 tracking-tight uppercase">
+                            <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">
                                 Year {selectedYear}
                             </h2>
-                            <p className="text-sm font-bold text-slate-500 mt-1 uppercase tracking-widest">Annual Financial Overview</p>
+                            <p className="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-widest">Annual Financial Overview</p>
                         </div>
 
                         {/* Year Filter Selector */}
-                        <div className="flex items-center gap-4 bg-white p-3 px-5 rounded-xl border border-slate-200 shadow-sm">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Select Year:</label>
+                        <div className="flex items-center gap-4 bg-white p-2 px-4 rounded-xl border border-slate-200 shadow-sm">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Select Year:</label>
                             <select
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(e.target.value)}
-                                className="bg-transparent border-none text-sm font-bold text-slate-900 outline-none cursor-pointer pr-8 hover:text-[#0067ff] transition-colors"
+                                className="bg-transparent border-none text-xs font-bold text-slate-900 outline-none cursor-pointer hover:text-[#0067ff] transition-colors"
                             >
                                 {availableYears.map(y => (
                                     <option key={y} value={y} className="bg-white text-slate-900">{y}</option>
@@ -626,14 +622,14 @@ export default function Dashboard() {
 
 
                     {/* Annual Performance Chart (Income vs Expense) */}
-                    <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                    <Card className="p-8">
                         <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Annual Flux</h3>
                         <div className="h-[350px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={yearlyFiltered.monthlyPerformance} barGap={8}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 700, fill: '#94a3b8' }} />
-                                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 700, fill: '#94a3b8' }} tickFormatter={(val) => `$${val}`} />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }} tickFormatter={(val) => `$${val}`} />
                                     <Tooltip
                                         cursor={{ fill: '#f8fafc' }}
                                         contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
@@ -644,70 +640,70 @@ export default function Dashboard() {
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
-                    </div>
+                    </Card>
 
                     {/* Annual Summary Table - High Impact Totals */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-emerald-500/30 transition-all">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <Card className="p-6 flex items-center justify-between group">
                             <div>
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Income</p>
-                                <p className="text-2xl font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">${yearlyFiltered.income.toLocaleString()}</p>
+                                <p className="text-2xl font-black text-slate-900 group-hover:text-emerald-600 transition-colors tracking-tight">${yearlyFiltered.income.toLocaleString()}</p>
                             </div>
-                            <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-100 group-hover:bg-white transition-all">
-                                <TrendingUp className="text-emerald-500" size={24} />
+                            <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+                                <TrendingUp className="text-emerald-500" size={20} />
                             </div>
-                        </div>
-                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-rose-500/30 transition-all">
+                        </Card>
+                        <Card className="p-6 flex items-center justify-between group">
                             <div>
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Expenses</p>
-                                <p className="text-2xl font-bold text-slate-900 group-hover:text-rose-600 transition-colors">${yearlyFiltered.expense.toLocaleString()}</p>
+                                <p className="text-2xl font-black text-slate-900 group-hover:text-rose-600 transition-colors tracking-tight">${yearlyFiltered.expense.toLocaleString()}</p>
                             </div>
-                            <div className="p-3 bg-rose-50 rounded-lg border border-rose-100 group-hover:bg-white transition-all">
-                                <TrendingDown className="text-rose-500" size={24} />
+                            <div className="p-3 bg-rose-50 rounded-lg border border-rose-100">
+                                <TrendingDown className="text-rose-500" size={20} />
                             </div>
-                        </div>
-                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-[#0067ff]/30 transition-all">
+                        </Card>
+                        <Card className="p-6 flex items-center justify-between group">
                             <div>
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Investment</p>
-                                <p className="text-2xl font-bold text-slate-900 group-hover:text-[#0067ff] transition-colors">${yearlyFiltered.investment.toLocaleString()}</p>
+                                <p className="text-2xl font-black text-slate-900 group-hover:text-[#0067ff] transition-colors tracking-tight">${yearlyFiltered.investment.toLocaleString()}</p>
                             </div>
-                            <div className="p-3 bg-blue-50 rounded-lg border border-blue-100 group-hover:bg-white transition-all">
-                                <Briefcase className="text-[#0067ff]" size={24} />
+                            <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                <Briefcase className="text-[#0067ff]" size={20} />
                             </div>
-                        </div>
-                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-amber-500/30 transition-all">
+                        </Card>
+                        <Card className="p-6 flex items-center justify-between group">
                             <div>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Net Cash Flow</p>
-                                <p className="text-2xl font-bold text-slate-900 group-hover:text-amber-600 transition-colors">${(yearlyFiltered.income - (yearlyFiltered.expense + yearlyFiltered.investment)).toLocaleString()}</p>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Net Flow</p>
+                                <p className="text-2xl font-black text-slate-900 group-hover:text-amber-600 transition-colors tracking-tight">${(yearlyFiltered.income - (yearlyFiltered.expense + yearlyFiltered.investment)).toLocaleString()}</p>
                             </div>
-                            <div className="p-3 bg-amber-50 rounded-lg border border-amber-100 group-hover:bg-white transition-all">
-                                <Banknote className="text-amber-500" size={24} />
+                            <div className="p-3 bg-amber-50 rounded-lg border border-amber-100">
+                                <Banknote className="text-amber-500" size={20} />
                             </div>
-                        </div>
+                        </Card>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Breakdown by Category */}
-                        <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                        <Card className="p-8">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-base font-bold text-slate-900 uppercase tracking-tight">Category Spend</h3>
-                                <div className="px-3 py-1 bg-blue-50 text-[#0067ff] text-[10px] font-bold rounded-lg uppercase tracking-widest border border-blue-100">Yearly Total</div>
+                                <div className="px-3 py-1 bg-blue-50 text-[#0067ff] text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">Yearly Total</div>
                             </div>
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                                 {sortedYearlyByCategory.map((item, i) => (
-                                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-100 group hover:bg-white hover:border-[#0067ff]/20 hover:shadow-sm transition-all">
-                                        <span className="font-bold text-slate-600 group-hover:text-[#0067ff] transition-colors capitalize">{item.name}</span>
-                                        <span className="font-bold text-slate-900 text-lg tracking-tight">${item.amount.toLocaleString()}</span>
+                                    <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 group transition-all">
+                                        <span className="font-bold text-slate-500 text-xs uppercase tracking-widest">{item.name}</span>
+                                        <span className="font-black text-slate-900 text-lg tracking-tight">${item.amount.toLocaleString()}</span>
                                     </div>
                                 ))}
                                 {sortedYearlyByCategory.length === 0 && (
-                                    <div className="text-center py-12 text-slate-300 font-medium uppercase tracking-widest text-xs">No annual data found.</div>
+                                    <div className="text-center py-12 text-slate-300 font-medium uppercase tracking-widest text-[10px]">No annual data found.</div>
                                 )}
                             </div>
-                        </div>
+                        </Card>
 
                         {/* Distribution Chart */}
-                        <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                        <Card className="p-8">
                             <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Yearly Split</h3>
                             <div className="h-[250px]">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -730,23 +726,23 @@ export default function Dashboard() {
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>
-                            <div className="space-y-4 mt-8">
+                            <div className="space-y-3 mt-8">
                                 {yearlyDistData.map(item => (
                                     <div key={item.name} className="flex items-center justify-between text-sm group">
                                         <span className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">{item.name}</span>
-                                        <span className="font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 group-hover:bg-blue-50 group-hover:border-blue-100 transition-all tracking-tight">${item.amount.toLocaleString()}</span>
+                                        <span className="font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 transition-all tracking-tight text-xs">${item.amount.toLocaleString()}</span>
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </Card>
                     </div>
 
                     {/* Savings Chart */}
-                    <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+                    <Card className="p-8">
                         <div className="flex items-center justify-between mb-8">
                             <div>
                                 <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Savings Velocity</h3>
-                                <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-[0.2em]">Net Monthly Growth Rate</p>
+                                <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-widest">Net Monthly Growth Rate</p>
                             </div>
                         </div>
                         <div className="h-[300px]">
@@ -759,8 +755,8 @@ export default function Dashboard() {
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 700, fill: '#94a3b8' }} />
-                                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 700, fill: '#94a3b8' }} tickFormatter={(val) => `$${val}`} />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }} tickFormatter={(val) => `$${val}`} />
                                     <Tooltip
                                         contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
                                         labelStyle={{ fontWeight: 900, marginBottom: '4px' }}
@@ -769,72 +765,57 @@ export default function Dashboard() {
                                 </AreaChart>
                             </ResponsiveContainer>
                         </div>
-                    </div>
+                    </Card>
                 </div>
             )}
 
             {activeTab === 'summary' && (
                 <div className="space-y-8 animate-fade-in">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <Card className="p-8 bg-white border border-slate-200 shadow-sm relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-[80px] -mr-8 -mt-8 transition-all group-hover:scale-110 opacity-50" />
-                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Monthly Net Flow</p>
-                            <h3 className={`text-3xl font-bold tracking-tight ${(monthlyFiltered.income - (monthlyFiltered.expense + monthlyFiltered.investment)) >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <Card className="p-6">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Monthly Surplus</p>
+                            <h3 className={`text-2xl font-black tracking-tight ${monthlyFiltered.income - (monthlyFiltered.expense + monthlyFiltered.investment) >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                                 ${(monthlyFiltered.income - (monthlyFiltered.expense + monthlyFiltered.investment)).toLocaleString()}
                             </h3>
-                            <p className="text-[10px] text-slate-400 mt-2 font-medium">Income - (Spending + Investments)</p>
+                            <p className="text-[10px] text-slate-400 mt-2 font-medium italic">Calculated after all outflows</p>
                         </Card>
 
-                        <Card className="p-8 bg-white border border-slate-200 shadow-sm relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-[80px] -mr-8 -mt-8 transition-all group-hover:scale-110 opacity-50" />
-                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Investment Intensity</p>
-                            <h3 className="text-3xl font-bold text-[#0067ff] tracking-tight">
-                                {monthlyFiltered.income > 0 ? ((monthlyFiltered.investment / monthlyFiltered.income) * 100).toFixed(1) : 0}%
-                            </h3>
-                            <p className="text-[10px] text-slate-400 mt-2 font-medium">Percentage of income invested</p>
-                        </Card>
-
-                        <Card className="p-8 bg-white border border-slate-200 shadow-sm relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-[80px] -mr-8 -mt-8 transition-all group-hover:scale-110 opacity-50" />
-                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Savings Rate</p>
-                            <h3 className="text-3xl font-bold text-amber-600 tracking-tight">
+                        <Card className="p-6">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Savings Rate</p>
+                            <h3 className="text-2xl font-black text-indigo-600 tracking-tight">
                                 {monthlyFiltered.income > 0 ? (((monthlyFiltered.income - monthlyFiltered.expense) / monthlyFiltered.income) * 100).toFixed(1) : 0}%
                             </h3>
                             <p className="text-[10px] text-slate-400 mt-2 font-medium">Liquid savings before investments</p>
                         </Card>
+
+                        <Card className="p-6">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Debt-to-Income</p>
+                            <h3 className={`text-2xl font-black tracking-tight ${monthlyFiltered.income > 0 && (monthlyFiltered.credit / monthlyFiltered.income) > 0.4 ? 'text-rose-600' : 'text-slate-900'}`}>
+                                {monthlyFiltered.income > 0 ? ((monthlyFiltered.credit / monthlyFiltered.income) * 100).toFixed(1) : 0}%
+                            </h3>
+                            <div className="mt-4 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-full bg-amber-500 rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.credit / monthlyFiltered.income) * 100 : 0))}%` }} />
+                            </div>
+                        </Card>
+
+                        <Card className="p-6">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Expense Ratio</p>
+                            <h3 className="text-2xl font-black text-rose-600 tracking-tight">
+                                {monthlyFiltered.income > 0 ? ((monthlyFiltered.expense / monthlyFiltered.income) * 100).toFixed(1) : 0}%
+                            </h3>
+                            <div className="mt-4 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-full bg-rose-500 rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.expense / monthlyFiltered.income) * 100 : 0))}%` }} />
+                            </div>
+                        </Card>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <Card className="p-8 bg-white border border-slate-200 shadow-sm">
+                        <Card className="p-8">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Financial Health Indices</h3>
                                 <Activity className="text-slate-300" size={20} />
                             </div>
                             <div className="space-y-6">
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                                        <span>Debt-to-Income</span>
-                                        <span className={monthlyFiltered.income > 0 && (monthlyFiltered.credit / monthlyFiltered.income) > 0.4 ? 'text-rose-500' : 'text-slate-900'}>
-                                            {monthlyFiltered.income > 0 ? ((monthlyFiltered.credit / monthlyFiltered.income) * 100).toFixed(1) : 0}%
-                                        </span>
-                                    </div>
-                                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-amber-500 rounded-full" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.credit / monthlyFiltered.income) * 100 : 0))}%` }} />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                                        <span>Expense Ratio</span>
-                                        <span className="text-slate-900">
-                                            {monthlyFiltered.income > 0 ? ((monthlyFiltered.expense / monthlyFiltered.income) * 100).toFixed(1) : 0}%
-                                        </span>
-                                    </div>
-                                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-rose-500 rounded-full" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.expense / monthlyFiltered.income) * 100 : 0))}%` }} />
-                                    </div>
-                                </div>
-
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
                                         <span>Capital Deployment</span>
@@ -843,44 +824,54 @@ export default function Dashboard() {
                                         </span>
                                     </div>
                                     <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-[#0067ff] rounded-full" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.investment / monthlyFiltered.income) * 100 : 0))}%` }} />
+                                        <div className="h-full bg-[#0067ff] rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.investment / monthlyFiltered.income) * 100 : 0))}%` }} />
+                                    </div>
+                                </div>
+
+                                <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100 flex gap-4 transition-all hover:bg-white">
+                                    <div className="w-10 h-10 rounded-lg bg-white border border-blue-100 flex items-center justify-center text-[#0067ff] shrink-0">
+                                        <Banknote size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-bold text-blue-900 tracking-tight">Net Worth Stability</p>
+                                        <p className="text-[10px] text-blue-700 font-bold uppercase tracking-widest mt-1">Your assets cover {netWorth > 0 ? (netWorth / (monthlyFiltered.expense || 1)).toFixed(1) : 0} months of spending.</p>
                                     </div>
                                 </div>
                             </div>
                         </Card>
 
-                        <Card className="p-8 bg-white border border-slate-200 shadow-sm">
+                        <Card className="p-8">
                             <h3 className="text-base font-bold text-slate-900 mb-8 uppercase tracking-widest">Smart Insights</h3>
                             <div className="space-y-4">
                                 {(monthlyFiltered.income - (monthlyFiltered.expense + monthlyFiltered.investment)) > 0 ? (
-                                    <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex gap-4">
+                                    <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex gap-4 transition-all hover:bg-emerald-100/30">
                                         <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
                                             <TrendingUp size={20} />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-emerald-900">Positive Cash Flow</p>
-                                            <p className="text-xs text-emerald-700/70 mt-0.5 font-medium">You have surplus capital to invest or save.</p>
+                                            <p className="text-sm font-bold text-emerald-900 tracking-tight">Positive Cash Flow</p>
+                                            <p className="text-xs text-emerald-700/70 mt-0.5 font-medium italic">You have surplus capital to invest or save this month.</p>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-4 bg-rose-50 rounded-xl border border-rose-100 flex gap-4">
+                                    <div className="p-4 bg-rose-50 rounded-xl border border-rose-100 flex gap-4 transition-all hover:bg-rose-100/30">
                                         <div className="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center text-rose-600 shrink-0">
                                             <TrendingDown size={20} />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-rose-900">Negative Cash Flow</p>
-                                            <p className="text-xs text-rose-700/70 mt-0.5 font-medium">Outflow exceeds inflow this month.</p>
+                                            <p className="text-sm font-bold text-rose-900 tracking-tight">Negative Cash Flow</p>
+                                            <p className="text-xs text-rose-700/70 mt-0.5 font-medium italic">Outflow exceeds inflow. Re-evaluate your budget.</p>
                                         </div>
                                     </div>
                                 )}
 
-                                <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 flex gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-[#0067ff] shrink-0">
-                                        <Banknote size={20} />
+                                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex gap-4 opacity-60">
+                                    <div className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-400 shrink-0">
+                                        <AlertCircle size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-bold text-blue-900">Net Worth Stability</p>
-                                        <p className="text-xs text-blue-700/70 mt-0.5 font-medium">Your assets cover {netWorth > 0 ? (netWorth / (monthlyFiltered.expense || 1)).toFixed(1) : 0} months of current spending.</p>
+                                        <p className="text-sm font-bold text-slate-500 tracking-tight">AI Advisor Active</p>
+                                        <p className="text-xs text-slate-400 mt-0.5 font-medium italic">Monitoring for unusual spending patterns...</p>
                                     </div>
                                 </div>
                             </div>
