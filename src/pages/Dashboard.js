@@ -278,8 +278,7 @@ export default function Dashboard() {
                         <Plus size={14} /> Add Income
                     </a>
                     <a href="/expenditure" className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-100 transition-colors font-bold text-xs uppercase tracking-wider border border-rose-200">
-                        <Minus size={14} /> Add Expernse
-                    </a>
+                        <Minus size={14} /> Add Expense                    </a>
                     <a href="/investments" className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-[#0067ff] rounded-xl hover:bg-blue-100 transition-colors font-bold text-xs uppercase tracking-wider border border-blue-200">
                         <Briefcase size={14} /> Invest
                     </a>
