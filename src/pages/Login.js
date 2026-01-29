@@ -41,11 +41,11 @@ export default function Login() {
                     <div className="bg-[#0067ff] p-5 rounded-2xl mb-8 shadow-lg shadow-blue-200">
                         <Wallet className="text-white w-10 h-10" />
                     </div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-3 uppercase">
-                        {isLogin ? 'Welcome' : 'Join Us'}
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-3 uppercase leading-tight">
+                        {isLogin ? 'Welcome Back' : 'Take Control'}
                     </h1>
                     <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px] opacity-60 px-4">
-                        {isLogin ? 'Access your financial dashboard' : 'Start your journey to financial freedom'}
+                        {isLogin ? 'Access your financial intelligence' : 'Start your journey to financial freedom today'}
                     </p>
                 </div>
 
@@ -89,20 +89,31 @@ export default function Login() {
                                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                 Processing...
                             </div>
-                        ) : (isLogin ? 'Sign In Now' : 'Create My Account')}
+                        ) : (isLogin ? 'Access Dashboard' : 'Create Free Account')}
                     </Button>
                 </form>
 
-                <div className="mt-10 pt-8 border-t border-slate-100 text-center">
+                <div className="mt-8 flex items-center justify-center gap-6 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">AES-256 Secure</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Private Data</span>
+                    </div>
+                </div>
+
+                <div className="mt-8 pt-8 border-t border-slate-100 text-center">
                     <button
                         type="button"
                         onClick={() => setIsLogin(!isLogin)}
                         className="text-[10px] font-black text-slate-400 hover:text-[#0067ff] transition-all uppercase tracking-[0.2em]"
                     >
                         {isLogin ? (
-                            <>Don't have an account? <span className="text-[#0067ff] decoration-[#0067ff]/30 underline underline-offset-4">Join Free</span></>
+                            <>New here? <span className="text-[#0067ff] decoration-[#0067ff]/30 underline underline-offset-4">Start Free Trial</span></>
                         ) : (
-                            <>Already have an account? <span className="text-[#0067ff] decoration-[#0067ff]/30 underline underline-offset-4">Sign In</span></>
+                            <>Existing user? <span className="text-[#0067ff] decoration-[#0067ff]/30 underline underline-offset-4">Secure Login</span></>
                         )}
                     </button>
                 </div>

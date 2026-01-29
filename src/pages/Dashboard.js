@@ -4,7 +4,7 @@ import { subscribeToCollection, collections } from '../services/firestore';
 import { Card } from '../components/ui/Card';
 import { Tabs } from '../components/ui/Tabs';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, AreaChart, Area } from 'recharts';
-import { Wallet, ArrowUpRight, ArrowDownRight, CreditCard, Activity, TrendingUp, TrendingDown, Banknote, Briefcase, AlertCircle } from 'lucide-react';
+import { Wallet, ArrowUpRight, ArrowDownRight, CreditCard, Activity, TrendingUp, TrendingDown, Banknote, Briefcase, AlertCircle, Plus, Minus } from 'lucide-react';
 
 const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
 
@@ -271,6 +271,18 @@ export default function Dashboard() {
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 tracking-tight uppercase">Financial Dashboard</h1>
                     <p className="text-slate-500 mt-1 font-medium">Real-time financial intelligence and lifetime analytics.</p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <a href="/income" className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100 transition-colors font-bold text-xs uppercase tracking-wider border border-emerald-200">
+                        <Plus size={14} /> Add Income
+                    </a>
+                    <a href="/expenditure" className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-100 transition-colors font-bold text-xs uppercase tracking-wider border border-rose-200">
+                        <Minus size={14} /> Add Expernse
+                    </a>
+                    <a href="/investments" className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-[#0067ff] rounded-xl hover:bg-blue-100 transition-colors font-bold text-xs uppercase tracking-wider border border-blue-200">
+                        <Briefcase size={14} /> Invest
+                    </a>
                 </div>
 
                 <Tabs
