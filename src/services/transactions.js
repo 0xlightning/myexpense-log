@@ -256,7 +256,7 @@ export const createCard = async (userId, { name, type, initialBalance, creditLim
 
             const balance = parseFloat(initialBalance) || 0;
 
-            // 1. Create Card
+            // 1. Create Primary Card
             transaction.set(cardRef, {
                 name,
                 type,
@@ -267,15 +267,27 @@ export const createCard = async (userId, { name, type, initialBalance, creditLim
                 createdAt: serverTimestamp()
             });
 
-            // 2. If there is an initial balance, record it as an adjustment
-            // (Only if balance is not 0, to avoid clutter)
+            // 2. Create Linked Cash Account if primary is not cash
+            if (type !== 'cash') {
+                const cashCardRef = doc(collection(db, `users/${userId}/${collections.cards}`));
+                transaction.set(cashCardRef, {
+                    name: `${name} (Cash)`,
+                    type: 'cash',
+                    balance: 0,
+                    parentCardId: cardRef.id, // Link to primary card
+                    isActive: true,
+                    createdAt: serverTimestamp()
+                });
+            }
+
+            // 3. If there is an initial balance, record it as an adjustment
             if (balance !== 0) {
                 transaction.set(ledgerRef, {
                     type: 'adjustment',
                     amount: balance,
-                    date: new Date().toISOString().split('T')[0], // Today's date YYYY-MM-DD
+                    date: new Date().toISOString().split('T')[0],
                     cardId: cardRef.id,
-                    refId: cardRef.id, // Reference the card itself
+                    refId: cardRef.id,
                     description: `Initial balance for ${name}`,
                     createdAt: serverTimestamp()
                 });

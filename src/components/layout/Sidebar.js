@@ -45,7 +45,7 @@ export function Sidebar() {
         <>
             {/* Mobile Menu Button */}
             <button
-                className="fixed top-4 left-4 z-50 p-2 bg-slate-900/90 backdrop-blur-md text-white rounded-lg md:hidden border border-white/10 shadow-lg"
+                className="fixed top-4 left-4 z-50 p-2 bg-[#1C1917]/90 backdrop-blur-md text-white rounded-lg md:hidden border border-white/10 shadow-lg"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -61,14 +61,14 @@ export function Sidebar() {
 
             {/* Sidebar */}
             <div className={twMerge(
-                "fixed top-0 left-0 h-full w-72 bg-slate-950 text-slate-300 flex flex-col transition-transform duration-300 z-40 border-r border-slate-800 shadow-2xl",
+                "fixed top-0 left-0 h-full w-72 bg-[#1C1917] text-[#A8A29E] flex flex-col transition-transform duration-300 z-40 border-r border-[#292524] shadow-2xl",
                 isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
             )}>
                 <div className="p-8">
                     <h1 className="text-2xl font-black text-white tracking-widest uppercase">
                         My Expense Log
                     </h1>
-                    <p className="text-[10px] text-slate-500 mt-1 font-bold uppercase tracking-[0.2em]">Wealth Management</p>
+                    <p className="text-[10px] text-[#78716C] mt-1 font-bold uppercase tracking-[0.2em]">Wealth Management</p>
                 </div>
 
                 <nav className="flex-1 px-4 space-y-2 overflow-y-auto py-4">
@@ -80,8 +80,8 @@ export function Sidebar() {
                             className={({ isActive }) => clsx(
                                 "flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-200 group relative",
                                 isActive
-                                    ? "text-[#0067ff] bg-[#0067ff]/10"
-                                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                                    ? "text-teal-500 bg-teal-500/10"
+                                    : "text-[#A8A29E] hover:text-white hover:bg-white/5"
                             )}
                         >
                             {({ isActive }) => (
@@ -90,13 +90,13 @@ export function Sidebar() {
                                         size={20}
                                         className={clsx(
                                             "relative z-10 transition-colors duration-200",
-                                            isActive ? "text-[#0067ff]" : "text-slate-400 group-hover:text-white"
+                                            isActive ? "text-teal-500" : "text-[#A8A29E] group-hover:text-white"
                                         )}
                                     />
                                     <span className="relative z-10 font-bold tracking-tight text-sm">{item.name}</span>
 
                                     {isActive && (
-                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#0067ff] rounded-r-full" />
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-teal-500 rounded-r-full" />
                                     )}
                                 </>
                             )}
@@ -106,12 +106,12 @@ export function Sidebar() {
 
                 <div className="p-4 m-4 rounded-2xl bg-white/5 border border-white/5">
                     <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-black text-sm border border-slate-700">
+                        <div className="w-10 h-10 rounded-full bg-[#292524] flex items-center justify-center text-white font-black text-sm border border-[#44403c]">
                             {currentUser?.email?.[0].toUpperCase() || 'U'}
                         </div>
                         <div className="flex-1 overflow-hidden">
                             <p className="text-sm font-bold text-white truncate">{currentUser?.email}</p>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Premium Plan</p>
+                            <p className="text-[10px] text-[#78716C] font-bold uppercase tracking-widest">Premium Plan</p>
                         </div>
                     </div>
                     <button

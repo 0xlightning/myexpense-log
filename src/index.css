@@ -4,16 +4,16 @@
 
 @layer base {
   :root {
-    --zoho-blue: #0067ff;
-    --zoho-blue-dark: #0056d6;
-    --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    --card-shadow-hover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --card-border: 1px solid #e2e8f0;
+    --zoho-blue: #0D9488;
+    --zoho-blue-dark: #0F766E;
+    --card-shadow: 0 1px 3px 0 rgb(28 25 23 / 0.05), 0 1px 2px -1px rgb(28 25 23 / 0.05);
+    --card-shadow-hover: 0 4px 6px -1px rgb(28 25 23 / 0.05), 0 2px 4px -2px rgb(28 25 23 / 0.05);
+    --card-border: 1px solid #e7e5e4;
     --card-radius: 0.75rem;
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-[#FAFAF9] text-[#1C1917] antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
@@ -21,11 +21,11 @@
 
 @layer components {
   .card-standard {
-    @apply bg-white border border-slate-200 rounded-xl shadow-sm transition-all duration-300;
+    @apply bg-white border border-stone-200 rounded-xl shadow-sm transition-all duration-300;
   }
 
   .card-standard:hover {
-    @apply shadow-md border-[#0067ff]/30;
+    @apply shadow-md border-[var(--zoho-blue)]/30;
   }
 
   .table-standard {
@@ -33,7 +33,7 @@
   }
 
   .table-header-standard {
-    @apply bg-slate-50 text-slate-500 border-b border-slate-200 text-[10px] font-bold uppercase tracking-widest;
+    @apply bg-[#FAFAF9] text-stone-500 border-b border-stone-200 text-[10px] font-bold uppercase tracking-widest;
   }
 
   .badge-standard {

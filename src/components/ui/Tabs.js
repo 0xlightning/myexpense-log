@@ -12,10 +12,10 @@ export function Tabs({ tabs, activeTab, onChange, className }) {
                     key={tab.id}
                     onClick={() => onChange(tab.id)}
                     className={twMerge(
-                        "whitespace-nowrap px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 rounded-lg outline-none",
+                        "px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300",
                         activeTab === tab.id
-                            ? "bg-white text-[#0067ff] shadow-sm border border-slate-200"
-                            : "text-slate-500 hover:text-[#0067ff] hover:bg-white/50"
+                            ? "bg-teal-600 text-white shadow-md shadow-teal-200 transform scale-100"
+                            : "text-stone-400 hover:text-stone-600 hover:bg-stone-50 scale-95"
                     )}
                 >
                     {tab.label}

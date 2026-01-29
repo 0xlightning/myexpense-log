@@ -35,7 +35,7 @@ export function Table({ columns, data, onEdit, onDelete }) {
                                     {onEdit && (
                                         <button
                                             onClick={() => onEdit(row)}
-                                            className="text-[#0067ff] hover:text-[#0056d6] font-bold text-xs uppercase"
+                                            className="text-teal-600 hover:text-teal-700 font-bold text-xs uppercase"
                                         >
                                             Edit
                                         </button>

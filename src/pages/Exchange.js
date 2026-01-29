@@ -63,75 +63,104 @@ export default function Exchange() {
         <div className="space-y-8 animate-fade-in max-w-[1600px] mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase">
-                        <ArrowRightLeft className="text-[#0067ff]" size={28} />
+                    <h1 className="text-2xl font-black text-stone-900 tracking-tight flex items-center gap-3 uppercase">
+                        <ArrowRightLeft className="text-[teal-600]" size={28} />
                         Money Transfer
                     </h1>
-                    <p className="text-slate-500 mt-1 font-medium">Move funds between your accounts securely.</p>
+                    <p className="text-stone-500 mt-1 font-medium">Move funds between your accounts securely.</p>
                 </div>
+                <Button onClick={handleAddNew} className="bg-teal-600 hover:bg-teal-700 shadow-lg shadow-teal-200/50 px-6 h-[42px] rounded-xl flex items-center gap-2 w-full md:w-auto justify-center">
+                    <Plus size={18} strokeWidth={3} />
+                    <span className="font-bold uppercase text-xs tracking-wider">New Transfer</span>
+                </Button>
             </div>
 
             {/* Transfer History - Full Width */}
             <Card className="p-8">
-                <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-widest">
-                    <ArrowRightLeft size={24} className="text-slate-400" /> Transfer History
+                <h2 className="text-lg font-bold text-stone-900 mb-6 flex items-center gap-2 uppercase tracking-widest">
+                    <ArrowRightLeft size={24} className="text-stone-400" /> Transfer History
                 </h2>
 
                 <div className="space-y-4">
-                    {([...transfers]).sort((a, b) => new Date(b.date) - new Date(a.date)).map((t) => (
-                        <div key={t.id} className="group flex items-center justify-between p-5 rounded-2xl bg-white border border-slate-100/80 hover:border-[#0067ff]/30 hover:shadow-md transition-all duration-300">
-                            <div className="flex items-center gap-5">
-                                <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100 group-hover:bg-white transition-colors">
-                                    <ArrowRightLeft size={22} className="text-[#0067ff]" />
+                    {/* Desktop View */}
+                    <div className="hidden md:block space-y-4">
+                        {([...transfers]).sort((a, b) => new Date(b.date) - new Date(a.date)).map((t) => (
+                            <div key={t.id} className="group flex items-center justify-between p-5 rounded-2xl bg-white border border-stone-100/80 hover:border-[teal-600]/30 hover:shadow-md transition-all duration-300">
+                                <div className="flex items-center gap-5">
+                                    <div className="p-4 bg-teal-50/50 rounded-xl border border-teal-100 group-hover:bg-white transition-colors">
+                                        <ArrowRightLeft size={22} className="text-[teal-600]" />
+                                    </div>
+                                    <div>
+                                        <p className="font-black text-stone-900 text-sm uppercase tracking-tight">External Transfer</p>
+                                        <p className="text-xs text-stone-400 mt-1 font-bold">{format(new Date(t.date), 'MMM dd, yyyy')}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="font-black text-slate-900 text-sm uppercase tracking-tight">External Transfer</p>
-                                    <p className="text-xs text-slate-400 mt-1 font-bold">{format(new Date(t.date), 'MMM dd, yyyy')}</p>
-                                </div>
-                            </div>
 
-                            <div className="flex items-center gap-4 md:gap-12 overflow-hidden px-4 flex-1 justify-center">
-                                <div className="text-right flex-1 min-w-0">
-                                    <p className="text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-widest">Source</p>
-                                    <p className="text-sm font-black text-slate-800 truncate">
-                                        {cards.find(c => c.id === t.fromCardId)?.name || '...'}
-                                    </p>
+                                <div className="flex items-center gap-4 md:gap-12 overflow-hidden px-4 flex-1 justify-center">
+                                    <div className="text-right flex-1 min-w-0">
+                                        <p className="text-[10px] font-bold text-stone-400 mb-1 uppercase tracking-widest">Source</p>
+                                        <p className="text-sm font-black text-stone-800 truncate">
+                                            {cards.find(c => c.id === t.fromCardId)?.name || '...'}
+                                        </p>
+                                    </div>
+                                    <div className="bg-stone-50 p-2 rounded-full border border-stone-100 text-[teal-600]">
+                                        <ArrowRight size={16} strokeWidth={3} />
+                                    </div>
+                                    <div className="text-left flex-1 min-w-0">
+                                        <p className="text-[10px] font-bold text-stone-400 mb-1 uppercase tracking-widest">Target</p>
+                                        <p className="text-sm font-black text-stone-800 truncate">
+                                            {cards.find(c => c.id === t.toCardId)?.name || '...'}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="bg-slate-50 p-2 rounded-full border border-slate-100 text-[#0067ff]">
-                                    <ArrowRight size={16} strokeWidth={3} />
-                                </div>
-                                <div className="text-left flex-1 min-w-0">
-                                    <p className="text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-widest">Target</p>
-                                    <p className="text-sm font-black text-slate-800 truncate">
-                                        {cards.find(c => c.id === t.toCardId)?.name || '...'}
-                                    </p>
-                                </div>
-                            </div>
 
-                            <div className="text-right pl-6 border-l border-slate-100">
-                                <span className="block text-xl font-black text-slate-900">${t.amount.toLocaleString()}</span>
-                                {t.notes && <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight mt-1 truncate block max-w-[150px]">{t.notes}</span>}
+                                <div className="text-right pl-6 border-l border-stone-100">
+                                    <span className="block text-xl font-black text-stone-900">${t.amount.toLocaleString()}</span>
+                                    {t.notes && <span className="text-[10px] font-bold text-stone-400 uppercase tracking-tight mt-1 truncate block max-w-[150px]">{t.notes}</span>}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+
+                    {/* Mobile View */}
+                    <div className="md:hidden space-y-4">
+                        {([...transfers]).sort((a, b) => new Date(b.date) - new Date(a.date)).map((t) => (
+                            <div key={t.id} className="p-5 rounded-2xl bg-white border border-stone-100 shadow-sm flex flex-col gap-4">
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <p className="font-bold text-stone-400 text-xs uppercase tracking-widest mb-1">{format(new Date(t.date), 'MMM dd, yyyy')}</p>
+                                        <h3 className="font-black text-stone-800 uppercase tracking-tight">Transfer</h3>
+                                    </div>
+                                    <span className="text-xl font-black text-[teal-600]">${t.amount.toLocaleString()}</span>
+                                </div>
+                                <div className="flex items-center gap-3 bg-stone-50 p-3 rounded-xl border border-stone-100/50">
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-[9px] font-bold text-stone-400 uppercase tracking-wider mb-0.5">From</p>
+                                        <p className="text-sm font-bold text-stone-700 truncate">{cards.find(c => c.id === t.fromCardId)?.name || '...'}</p>
+                                    </div>
+                                    <ArrowRight size={14} className="text-stone-300" />
+                                    <div className="flex-1 min-w-0 text-right">
+                                        <p className="text-[9px] font-bold text-stone-400 uppercase tracking-wider mb-0.5">To</p>
+                                        <p className="text-sm font-bold text-stone-700 truncate">{cards.find(c => c.id === t.toCardId)?.name || '...'}</p>
+                                    </div>
+                                </div>
+                                {t.notes && (
+                                    <p className="text-xs text-stone-500 italic mt-1 pl-1 border-l-2 border-stone-200">
+                                        {t.notes}
+                                    </p>
+                                )}
+                            </div>
+                        ))}
+                    </div>
 
                     {transfers.length === 0 && (
-                        <div className="text-center py-24 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                            <Wallet size={48} className="mx-auto text-slate-300 mb-4" />
-                            <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">No transfer history yet</p>
+                        <div className="text-center py-24 bg-stone-50/50 rounded-2xl border border-dashed border-stone-200">
+                            <Wallet size={48} className="mx-auto text-stone-300 mb-4" />
+                            <p className="text-stone-400 font-bold uppercase tracking-[0.2em] text-[10px]">No transfer history yet</p>
                         </div>
                     )}
                 </div>
             </Card>
-
-            {/* Floating Action Button */}
-            <button
-                onClick={handleAddNew}
-                className="fixed bottom-8 right-8 w-16 h-16 bg-[#0067ff] hover:bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-40 border-4 border-white"
-                title="New Transfer"
-            >
-                <Plus size={28} />
-            </button>
 
             {/* Transfer Form Modal */}
             <Modal
@@ -148,12 +177,12 @@ export default function Exchange() {
             >
                 <form onSubmit={handleTransfer} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Source Account</label>
+                        <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Source Account</label>
                         <div className="relative">
-                            <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                            <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
                             <select
                                 required
-                                className="w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all appearance-none text-sm font-medium"
+                                className="w-full rounded-xl border border-stone-200 bg-white pl-11 pr-4 py-3 text-stone-900 focus:border-[teal-600]/50 focus:ring-4 focus:ring-[teal-600]/10 outline-none transition-all appearance-none text-sm font-medium"
                                 value={fromCardId}
                                 onChange={(e) => setFromCardId(e.target.value)}
                             >
@@ -168,18 +197,18 @@ export default function Exchange() {
                     </div>
 
                     <div className="flex justify-center -my-2 relative z-20">
-                        <div className="bg-blue-50 rounded-full p-2 border border-blue-100 shadow-sm">
-                            <ArrowRight className="text-[#0067ff] transform rotate-90" size={16} strokeWidth={3} />
+                        <div className="bg-teal-50 rounded-full p-2 border border-teal-100 shadow-sm">
+                            <ArrowRight className="text-[teal-600] transform rotate-90" size={16} strokeWidth={3} />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Destination Account</label>
+                        <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Destination Account</label>
                         <div className="relative">
-                            <Send className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                            <Send className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
                             <select
                                 required
-                                className="w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 py-3 text-slate-900 focus:border-[#0067ff]/50 focus:ring-4 focus:ring-[#0067ff]/10 outline-none transition-all appearance-none text-sm font-medium"
+                                className="w-full rounded-xl border border-stone-200 bg-white pl-11 pr-4 py-3 text-stone-900 focus:border-[teal-600]/50 focus:ring-4 focus:ring-[teal-600]/10 outline-none transition-all appearance-none text-sm font-medium"
                                 value={toCardId}
                                 onChange={(e) => setToCardId(e.target.value)}
                             >
@@ -194,9 +223,9 @@ export default function Exchange() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Transfer Amount</label>
+                        <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Transfer Amount</label>
                         <div className="relative">
-                            <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0067ff]" size={18} />
+                            <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-[teal-600]" size={18} />
                             <Input
                                 type="number"
                                 required
@@ -212,9 +241,9 @@ export default function Exchange() {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Transfer Date</label>
+                            <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Transfer Date</label>
                             <div className="relative">
-                                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
                                 <Input
                                     type="date"
                                     required
@@ -225,7 +254,7 @@ export default function Exchange() {
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Reference Note</label>
+                            <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Reference Note</label>
                             <Input
                                 type="text"
                                 value={notes}
@@ -236,7 +265,7 @@ export default function Exchange() {
                         </div>
                     </div>
 
-                    <div className="flex gap-3 mt-8 pt-6 border-t border-slate-100">
+                    <div className="flex gap-3 mt-8 pt-6 border-t border-stone-100">
                         <Button
                             type="button"
                             onClick={() => {
@@ -246,11 +275,11 @@ export default function Exchange() {
                                 setAmount('');
                                 setNotes('');
                             }}
-                            className="flex-1 bg-slate-100 text-slate-600 hover:bg-slate-200 border-none h-12 text-xs font-bold uppercase tracking-widest"
+                            className="flex-1 bg-stone-100 text-stone-600 hover:bg-stone-200 border-none h-12 text-xs font-bold uppercase tracking-widest"
                         >
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={loading} className="flex-[2] bg-[#0067ff] hover:bg-blue-600 shadow-lg shadow-blue-200 transition-all h-12 text-xs font-bold uppercase tracking-widest">
+                        <Button type="submit" disabled={loading} className="flex-[2] bg-teal-600 hover:bg-teal-700 shadow-teal-200/50 transition-all h-12 text-xs font-bold uppercase tracking-widest">
                             {loading ? 'Processing...' : 'Confirm Transfer'}
                         </Button>
                     </div>

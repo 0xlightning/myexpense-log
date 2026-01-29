@@ -6,7 +6,7 @@ import { Tabs } from '../components/ui/Tabs';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, AreaChart, Area } from 'recharts';
 import { Wallet, ArrowUpRight, ArrowDownRight, CreditCard, Activity, TrendingUp, TrendingDown, Banknote, Briefcase, AlertCircle, Plus, Minus } from 'lucide-react';
 
-const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
+const COLORS = ['#0D9488', '#65A30D', '#EA580C', '#D97706', '#57534E'];
 
 export default function Dashboard() {
     const { currentUser } = useAuth();
@@ -154,10 +154,10 @@ export default function Dashboard() {
         .sort((a, b) => b.amount - a.amount);
 
     const monthlyDistData = [
-        { name: 'Income', amount: monthlyFiltered.income, fill: '#10b981' },
-        { name: 'Spending', amount: monthlyFiltered.expense, fill: '#ef4444' },
-        { name: 'Investment', amount: monthlyFiltered.investment, fill: '#0067ff' },
-        { name: 'Credit', amount: monthlyFiltered.credit, fill: '#f59e0b' }
+        { name: 'Income', amount: monthlyFiltered.income, fill: '#65A30D' },
+        { name: 'Spending', amount: monthlyFiltered.expense, fill: '#EA580C' },
+        { name: 'Investment', amount: monthlyFiltered.investment, fill: '#0D9488' },
+        { name: 'Credit', amount: monthlyFiltered.credit, fill: '#D97706' }
     ];
 
     // --- Yearly Analytics (Filtered) ---
@@ -213,29 +213,35 @@ export default function Dashboard() {
     yearlyFiltered.monthlyPerformance.forEach(m => m.savings = m.income - m.expense);
 
     const yearlyDistData = [
-        { name: 'Income', amount: yearlyFiltered.income, fill: '#10b981' },
-        { name: 'Spending', amount: yearlyFiltered.expense, fill: '#ef4444' },
-        { name: 'Investment', amount: yearlyFiltered.investment, fill: '#0067ff' },
-        { name: 'Credit', amount: yearlyFiltered.credit, fill: '#f59e0b' }
+        { name: 'Income', amount: yearlyFiltered.income, fill: '#65A30D' },
+        { name: 'Spending', amount: yearlyFiltered.expense, fill: '#EA580C' },
+        { name: 'Investment', amount: yearlyFiltered.investment, fill: '#0D9488' },
+        { name: 'Credit', amount: yearlyFiltered.credit, fill: '#D97706' }
     ];
 
     const sortedYearlyByCategory = Object.entries(yearlyFiltered.byCategory)
         .map(([name, amount]) => ({ name, amount }))
         .sort((a, b) => b.amount - a.amount);
 
-    // Available filters
-    const availableMonths = Array.from({ length: 12 }, (_, i) => {
-        const d = new Date(now.getFullYear(), i, 1);
-        return d.toISOString().slice(0, 7);
-    });
-    const availableYears = [String(now.getFullYear()), String(now.getFullYear() - 1)];
+    // Available filters - Dynamic from ledger data
+    const availableMonths = Array.from(new Set([
+        ...ledger.map(tx => tx.date?.slice(0, 7)).filter(Boolean),
+        now.toISOString().slice(0, 7) // Always include current month
+    ])).sort((a, b) => b.localeCompare(a));
+
+    const availableYears = Array.from(new Set([
+        ...ledger.map(tx => tx.date?.slice(0, 4)).filter(Boolean),
+        String(now.getFullYear()), // Always include current year
+        String(now.getFullYear() - 1), // Include last year for perspective
+        "2024" // Explicitly ensure 2024 is available as requested
+    ])).sort((a, b) => b.localeCompare(a));
 
     // Lifetime Analytics (Current "Analytics" tab) - reusing stats logic for clarity
     const lifetimeDistData = [
-        { name: 'Income', amount: stats.income, fill: '#10b981' },
-        { name: 'Expense', amount: stats.expense, fill: '#ef4444' },
-        { name: 'Investment', amount: stats.investment, fill: '#0067ff' },
-        { name: 'Credit Used', amount: stats.credit, fill: '#f59e0b' }
+        { name: 'Income', amount: stats.income, fill: '#65A30D' },
+        { name: 'Expense', amount: stats.expense, fill: '#EA580C' },
+        { name: 'Investment', amount: stats.investment, fill: '#0D9488' },
+        { name: 'Credit Used', amount: stats.credit, fill: '#D97706' }
     ];
 
     if (loading) return (
@@ -249,15 +255,15 @@ export default function Dashboard() {
 
     if (error) return (
         <div className="min-h-[60vh] flex items-center justify-center">
-            <div className="bg-rose-50 border border-rose-100 p-8 rounded-2xl text-center max-w-md">
-                <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="bg-orange-50 border border-orange-100 p-8 rounded-2xl text-center max-w-md">
+                <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Activity size={24} />
                 </div>
-                <h2 className="text-lg font-bold text-slate-900 mb-2">Failed to load data</h2>
-                <p className="text-slate-600 mb-6">{error}</p>
+                <h2 className="text-lg font-bold text-stone-900 mb-2">Failed to load data</h2>
+                <p className="text-stone-600 mb-6">{error}</p>
                 <button
                     onClick={() => window.location.reload()}
-                    className="px-6 py-2 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors"
+                    className="px-6 py-2 bg-stone-900 text-white rounded-xl font-semibold hover:bg-stone-800 transition-colors"
                 >
                     Retry
                 </button>
@@ -269,17 +275,17 @@ export default function Dashboard() {
         <div className="space-y-8 animate-fade-in">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight uppercase">Financial Dashboard</h1>
-                    <p className="text-slate-500 mt-1 font-medium">Real-time financial intelligence and lifetime analytics.</p>
+                    <h1 className="text-2xl font-bold text-stone-900 tracking-tight uppercase">Financial Dashboard</h1>
+                    <p className="text-stone-500 mt-1 font-medium">Real-time financial intelligence and lifetime analytics.</p>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <a href="/income" className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100 transition-colors font-bold text-xs uppercase tracking-wider border border-emerald-200">
+                    <a href="/income" className="flex items-center gap-2 px-4 py-2 bg-lime-50 text-lime-700 rounded-xl hover:bg-lime-100 transition-colors font-bold text-xs uppercase tracking-wider border border-lime-200">
                         <Plus size={14} /> Add Income
                     </a>
-                    <a href="/expenditure" className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-100 transition-colors font-bold text-xs uppercase tracking-wider border border-rose-200">
+                    <a href="/expenditure" className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 rounded-xl hover:bg-orange-100 transition-colors font-bold text-xs uppercase tracking-wider border border-orange-200">
                         <Minus size={14} /> Add Expense                    </a>
-                    <a href="/investments" className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-[#0067ff] rounded-xl hover:bg-blue-100 transition-colors font-bold text-xs uppercase tracking-wider border border-blue-200">
+                    <a href="/investments" className="flex items-center gap-2 px-4 py-2 bg-teal-50 text-teal-700 rounded-xl hover:bg-teal-100 transition-colors font-bold text-xs uppercase tracking-wider border border-teal-200">
                         <Briefcase size={14} /> Invest
                     </a>
                 </div>
@@ -349,8 +355,8 @@ export default function Dashboard() {
                         {/* Investment */}
                         <Card className="p-6">
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-blue-50 rounded-xl border border-blue-100">
-                                    <Briefcase size={20} className="text-[#0067ff]" />
+                                <div className="p-3 bg-stone-100 rounded-xl border border-stone-200">
+                                    <Briefcase size={20} className="text-teal-600" />
                                 </div>
                             </div>
                             <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Total Investment</p>
@@ -485,7 +491,7 @@ export default function Dashboard() {
                             <select
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="bg-transparent border-none text-xs font-bold text-slate-900 outline-none cursor-pointer hover:text-[#0067ff] transition-colors"
+                                className="bg-transparent border-none text-xs font-bold text-stone-900 outline-none cursor-pointer hover:text-teal-600 transition-colors"
                             >
                                 {availableMonths.map(m => (
                                     <option key={m} value={m} className="bg-white text-slate-900">
@@ -514,7 +520,7 @@ export default function Dashboard() {
                         </Card>
                         <Card className="p-6">
                             <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1">Monthly Investment</p>
-                            <h3 className="text-2xl font-black text-[#0067ff] tracking-tight">${monthlyFiltered.investment.toLocaleString()}</h3>
+                            <h3 className="text-2xl font-black text-teal-600 tracking-tight">${monthlyFiltered.investment.toLocaleString()}</h3>
                         </Card>
                         <Card className="p-6">
                             <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1">Credit Usage</p>
@@ -622,7 +628,7 @@ export default function Dashboard() {
                             <select
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(e.target.value)}
-                                className="bg-transparent border-none text-xs font-bold text-slate-900 outline-none cursor-pointer hover:text-[#0067ff] transition-colors"
+                                className="bg-transparent border-none text-xs font-bold text-stone-900 outline-none cursor-pointer hover:text-teal-600 transition-colors"
                             >
                                 {availableYears.map(y => (
                                     <option key={y} value={y} className="bg-white text-slate-900">{y}</option>
@@ -647,7 +653,7 @@ export default function Dashboard() {
                                     />
                                     <Bar dataKey="income" name="Income" fill="#10b981" radius={[4, 4, 0, 0]} />
                                     <Bar dataKey="expense" name="Spending" fill="#ef4444" radius={[4, 4, 0, 0]} />
-                                    <Bar dataKey="investment" name="Investment" fill="#0067ff" radius={[4, 4, 0, 0]} />
+                                    <Bar dataKey="investment" name="Investment" fill="#0D9488" radius={[4, 4, 0, 0]} />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
@@ -676,10 +682,10 @@ export default function Dashboard() {
                         <Card className="p-6 flex items-center justify-between group">
                             <div>
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Investment</p>
-                                <p className="text-2xl font-black text-slate-900 group-hover:text-[#0067ff] transition-colors tracking-tight">${yearlyFiltered.investment.toLocaleString()}</p>
+                                <p className="text-2xl font-black text-slate-900 group-hover:text-teal-600 transition-colors tracking-tight">${yearlyFiltered.investment.toLocaleString()}</p>
                             </div>
-                            <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
-                                <Briefcase className="text-[#0067ff]" size={20} />
+                            <div className="p-3 bg-stone-100 rounded-lg border border-stone-200">
+                                <Briefcase className="text-teal-600" size={20} />
                             </div>
                         </Card>
                         <Card className="p-6 flex items-center justify-between group">
@@ -698,7 +704,7 @@ export default function Dashboard() {
                         <Card className="p-8">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-base font-bold text-slate-900 uppercase tracking-tight">Category Spend</h3>
-                                <div className="px-3 py-1 bg-blue-50 text-[#0067ff] text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">Yearly Total</div>
+                                <div className="px-3 py-1 bg-stone-100 text-teal-600 text-[10px] font-black rounded-lg uppercase tracking-widest border border-stone-200">Yearly Total</div>
                             </div>
                             <div className="space-y-3">
                                 {sortedYearlyByCategory.map((item, i) => (
@@ -830,17 +836,17 @@ export default function Dashboard() {
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
                                         <span>Capital Deployment</span>
-                                        <span className="text-[#0067ff]">
+                                        <span className="text-teal-600">
                                             {monthlyFiltered.income > 0 ? ((monthlyFiltered.investment / monthlyFiltered.income) * 100).toFixed(1) : 0}%
                                         </span>
                                     </div>
                                     <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-[#0067ff] rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.investment / monthlyFiltered.income) * 100 : 0))}%` }} />
+                                        <div className="h-full bg-teal-600 rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (monthlyFiltered.income > 0 ? (monthlyFiltered.investment / monthlyFiltered.income) * 100 : 0))}%` }} />
                                     </div>
                                 </div>
 
-                                <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100 flex gap-4 transition-all hover:bg-white">
-                                    <div className="w-10 h-10 rounded-lg bg-white border border-blue-100 flex items-center justify-center text-[#0067ff] shrink-0">
+                                <div className="p-4 bg-stone-50/50 rounded-xl border border-stone-100 flex gap-4 transition-all hover:bg-white">
+                                    <div className="w-10 h-10 rounded-lg bg-white border border-stone-100 flex items-center justify-center text-teal-600 shrink-0">
                                         <Banknote size={20} />
                                     </div>
                                     <div>
